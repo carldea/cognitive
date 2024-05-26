@@ -115,11 +115,10 @@ public class Config {
      * Returns a map of variable names to a list of updaters (Consumer objects). The caller will be able to update view models inside of controllers.
      * e.g. A developer wants to update a view model that is injected into a controller class.
      * The controller class contains the following:
-     * <code>
-     *    @InjectViewModel
+     *
+     *    {@literal @}InjectViewModel
      *    private SimpleViewModel myViewModel;
      *
-     * </code>
      * Since the ViewModel isn't created outside the FXMLMvvm.make(config) will allow the caller to create a config object to update the view model.
      * <pre>
      *     Config config = new Config();

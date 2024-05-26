@@ -23,6 +23,8 @@ package com.carlfx.cognitive.validator;
 import com.carlfx.cognitive.viewmodel.ViewModel;
 
 import java.util.function.BiFunction;
-
+/**
+ * Validator for properties.
+ */
 public interface PropertyValidator<T> extends BiFunction<T, ViewModel, ValidationMessage> {
 }

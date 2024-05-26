@@ -20,6 +20,8 @@ package com.carlfx.cognitive.validator;
 
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
-
+/**
+ * Validator for integer properties.
+ */
 public interface IntegerValidator extends Validator<ReadOnlyIntegerProperty> {
 }

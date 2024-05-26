@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 /**
  * A validator will valid a view model based on property values or model values. When an error occurs messages are
  * created to allow a UI developer to display as feedback to the User.
- * @param <T>
+ * @param <T> Type T is a JavaFX Read-only Property class.
  */
 public interface Validator<T> extends BiFunction<T, ViewModel, ValidationMessage> {
 }

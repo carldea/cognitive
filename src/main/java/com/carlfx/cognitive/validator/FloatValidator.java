@@ -22,6 +22,8 @@ package com.carlfx.cognitive.validator;
 import javafx.beans.property.ReadOnlyFloatProperty;
 
 import java.util.function.BiFunction;
-
+/**
+ * Validator for float properties.
+ */
 public interface FloatValidator extends Validator<ReadOnlyFloatProperty> {
 }

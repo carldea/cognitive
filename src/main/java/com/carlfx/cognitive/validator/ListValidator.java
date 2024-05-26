@@ -20,6 +20,8 @@ package com.carlfx.cognitive.validator;
 
 
 import javafx.beans.property.ReadOnlyListProperty;
-
+/**
+ * Validator for List properties.
+ */
 public interface ListValidator extends Validator<ReadOnlyListProperty> {
 }

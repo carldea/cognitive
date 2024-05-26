@@ -43,78 +43,171 @@ public class ValidationViewModel extends SimpleViewModel {
     protected Map<String, List<Validator<?>>> validatorsMap = new LinkedHashMap<>();
     protected List<ValidationMessage> validationMessages = new ArrayList<>();
 
+    /**
+     * Adds a property based on a name.
+     * @param name Name of property
+     * @param property A JavaFX property
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, Property property) {
         return super.addProperty(name, property);
     }
-
+    /**
+     * Adds a property based on a name and sets a string as the value.
+     * @param name Name of property
+     * @param value A JavaFX property
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, String value) {
         return super.addProperty(name, value);
     }
-
+    /**
+     * Adds a property based on a name and sets an int as the value.
+     * @param name Name of property
+     * @param value A JavaFX property
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, int value) {
         return super.addProperty(name, value);
     }
-
+    /**
+     * Adds a property based on a name and sets a long as the value.
+     * @param name Name of property
+     * @param value A JavaFX property
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, long value) {
         return super.addProperty(name, value);
     }
-
+    /**
+     * Adds a property based on a name and sets a float as the value.
+     * @param name Name of property
+     * @param value A JavaFX property value
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, float value) {
         return super.addProperty(name, value);
     }
-
+    /**
+     * Adds a property based on a name and sets a double as the value.
+     * @param name Name of property
+     * @param value A JavaFX property value
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, double value) {
         return super.addProperty(name, value);
     }
-
+    /**
+     * Adds a property based on a name and sets a boolean as the value.
+     * @param name Name of property
+     * @param value A JavaFX property value
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, boolean value) {
         return super.addProperty(name, value);
     }
-
+    /**
+     * Adds a property based on a name and sets a collection as the value.
+     * @param name Name of property
+     * @param value A JavaFX property value
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, Collection value) {
         return super.addProperty(name, value);
     }
-
+    /**
+     * Adds a property based on a name and sets an object as the value.
+     * @param name Name of property
+     * @param value A JavaFX property value
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel addProperty(String name, Object value) {
         return super.addProperty(name, value);
     }
+
+    /**
+     * Sets a property based on a name and sets values as a collection.
+     * @param name Name of property
+     * @param values A collection
+     * @param skip skip copying property values over to model values.
+     * @return returns itself.
+     */
     public ValidationViewModel setPropertyValues(String name, Collection values, boolean skip){
         return (ValidationViewModel) super.setPropertyValues(name, values, skip);
     }
+
+    /**
+     * Sets a property based on a name and sets values as a collection.
+     * @param name Name of property
+     * @param value An Object
+     * @param skip skip copying property values over to model values.
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel setPropertyValue(String name, Object value, boolean skip) {
         return (ValidationViewModel) super.setPropertyValue(name, value, skip);
     }
 
+    /**
+     * Copies model values back into property values.
+     * @return returns itself.
+     */
     @Override
     public ValidationViewModel reset() {
         return (ValidationViewModel) super.reset();
     }
 
+    /**
+     * Sets the model value layer based on the property name.
+     * @param name property name
+     * @param value Raw value to be set as the committed data.
+     * @return
+     */
     @Override
     public ValidationViewModel setValue(String name, Object value) {
         return (ValidationViewModel) super.setValue(name, value);
     }
 
+    /**
+     * Sets the property value layer based on the property name.
+     * @param name property name
+     * @param value Raw value to be set as the committed data.
+     * @return
+     */
     @Override
     public ValidationViewModel setPropertyValue(String name, Object value) {
         return (ValidationViewModel) super.setPropertyValue(name, value);
     }
 
+    /**
+     * Sets the property value layer based on the property name.
+     * @param name property name
+     * @param values Raw values to be set as a collection.
+     * @return ValidationViewModel itself
+     */
     @Override
     public ValidationViewModel setPropertyValues(String name, Collection values) {
         return (ValidationViewModel)super.setPropertyValues(name, values);
     }
 
+    /**
+     * Allows derived classes to create field (property) validators.
+     * @param name Property name
+     * @param friendlyName Friendly name of field
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     * @param <T> Any class derived from a Validator
+     */
     protected  <U extends ValidationViewModel, T extends Validator> U createFieldValidator(String name, String friendlyName, T validator) {
         String alreadyName = friendlyNameMap.get(name);
         if ((alreadyName != null && !alreadyName.isBlank() && (friendlyName == null || friendlyName.isBlank()))) {
@@ -127,42 +220,142 @@ public class ValidationViewModel extends SimpleViewModel {
         validators.add(validator);
         return (U) this;
     }
+
+    /**
+     * Allows derived classes to create global type validators. e.g. saving to database a duplicate record.
+     * @param errorCode an error code assigned to error message.
+     * @param name Property name
+     * @param errorMsg A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     * @param <T> Any class derived from a Validator
+     */
     protected  <U extends ValidationViewModel, T extends Validator> U createGlobalValidator(int errorCode, String name, String errorMsg, T validator) {
         validatorsMap.putIfAbsent(name, new ArrayList());
         List validators = validatorsMap.get(name);
         validators.add(validator);
         return (U) this;
     }
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, StringValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, BooleanValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, IntegerValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, LongValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, FloatValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, DoubleValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, ObjectValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
-
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, ListValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
 
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, SetValidator validator) {
         return createFieldValidator(name, friendlyName, validator);
     }
 
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return ValidationViewModel itself.
+     * @param <U> Any class derived from a ValidationViewModel
+     *
+     */
     public <U extends ValidationViewModel> U addValidator(String name, String friendlyName, CustomValidator validator) {
         friendlyNameMap.putIfAbsent(name, friendlyName);
         validatorsMap.putIfAbsent(name, new ArrayList());
@@ -206,28 +399,69 @@ public class ValidationViewModel extends SimpleViewModel {
         return (U) this;
     }
 
+    /**
+     * Returns all validators based on property name
+     * @param name property name
+     * @return List of validators
+     * @param <T> Derived Validators
+     * @param <U> Derived JavaFX Property
+     */
     public <T extends Validator<U>, U> List<T> getValidators(String name) {
         return (List<T>)validatorsMap.get(name);
     }
+
+    /**
+     * Returns all validation messages.
+     * @return A list of validation messages.
+     */
     public List<ValidationMessage> getValidationMessages() {
         return validationMessages;
     }
 
+    /**
+     * True is returned if there are error messages otherwise false.
+     * @return True is returned if there are error messages otherwise false.
+     */
     public boolean hasErrorMsgs() {
         return hasMsgType(ERROR);
     }
+
+    /**
+     * True is returned if there are no error messages otherwise false.
+     * @return True is returned if there are no error messages otherwise false.
+     */
     public boolean hasNoErrorMsgs() {
         return !hasErrorMsgs();
     }
+
+    /**
+     * True is returned if there are warning messages otherwise false.
+     * @return True is returned if there are warning messages otherwise false.
+     */
     public boolean hasWarningMsgs() {
         return hasMsgType(WARN);
     }
+
+    /**
+     * True is returned if there are no warning messages otherwise false.
+     * @return True is returned if there are no warning messages otherwise false.
+     */
     public boolean hasNoWarningMsgs() {
         return !hasWarningMsgs();
     }
+
+    /**
+     * True is returned if there are info messages otherwise false.
+     * @return True is returned if there are info messages otherwise false.
+     */
     public boolean hasInfoMsgs() {
         return hasMsgType(INFO);
     }
+
+    /**
+     * True is returned if there are no info messages otherwise false.
+     * @return True is returned if there are no info messages otherwise false.
+     */
     public boolean hasNoInfoMsgs() {
         return !hasInfoMsgs();
     }
@@ -238,11 +472,22 @@ public class ValidationViewModel extends SimpleViewModel {
         }
         return false;
     }
+
+    /**
+     * Invalidate or clear error messages.
+     * @return itself
+     * @param <U> Derived ValidationViewModel
+     */
     public <U extends ValidationViewModel> U invalidate() {
         getValidationMessages().clear();
         return (U) this;
     }
 
+    /**
+     * Returns friendly name of property name.
+     * @param propertName property name
+     * @return friendly name
+     */
     public String getFriendlyName(String propertName) {
         return friendlyNameMap.get(propertName);
     }
@@ -259,6 +504,11 @@ public class ValidationViewModel extends SimpleViewModel {
         }
         return this.save();
     }
+
+    /**
+     * Will call validate() before save(). If there are errors values won't be copied (saved).
+     * @return itself
+     */
     @Override
     public ValidationViewModel save() {
         // validate if any are errors, don't save.
@@ -270,6 +520,10 @@ public class ValidationViewModel extends SimpleViewModel {
         return (ValidationViewModel) super.save();
     }
 
+    /**
+     * Overridden toString() to output data for debugging.
+     * @return String representing data.
+     */
     @Override
     public String toString() {
 

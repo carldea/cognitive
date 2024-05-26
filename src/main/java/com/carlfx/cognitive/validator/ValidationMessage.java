@@ -77,6 +77,12 @@ public record ValidationMessage(String propertyName, MessageType messageType, in
      * Used in templates named substitution. Regex to find properties used in message such as ${myProp1}
      */
     static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{([a-zA-Z\\d\\_]+)\\}");
+
+    /**
+     * Interpolates a string containing property values to substitute.
+     * @param vvmodel A validation view model
+     * @return A interpolated string
+     */
     public String interpolate(ValidationViewModel vvmodel) {
         Matcher matcher = PROPERTY_PATTERN.matcher(this.message);
         List<String> props = new ArrayList<>();

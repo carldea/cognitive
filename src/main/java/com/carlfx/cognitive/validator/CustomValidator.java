@@ -17,6 +17,8 @@
  */
 
 package com.carlfx.cognitive.validator;
-
+/**
+ * A custom validator for any properties.
+ */
 public interface CustomValidator extends com.carlfx.cognitive.validator.Validator<Void> {
 }

@@ -4,6 +4,7 @@
     <groupId>io.github.carldea</groupId>
     <artifactId>cognitive</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -45,17 +46,17 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
-            <version>21</version>
+            <version>${openjfx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>21</version>
+            <version>${openjfx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>21</version>
+            <version>${openjfx.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -79,6 +80,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
                 <configuration>
                     <fork>true</fork>
                     <source>21</source>
@@ -86,6 +88,28 @@
                     <compilerArgs>
                     </compilerArgs>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals><goal>jar-no-fork</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
