@@ -15,12 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module org.carlfx.cognitive.test {
 
-    requires java.base;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires org.carlfx.cognitive;
+package org.carlfx.cognitive.validator;
 
-    exports org.carlfx.cognitive.test;
+
+import javafx.beans.property.ReadOnlyFloatProperty;
+
+/**
+ * Validator for float properties.
+ */
+public interface FloatValidator extends Validator<ReadOnlyFloatProperty> {
 }

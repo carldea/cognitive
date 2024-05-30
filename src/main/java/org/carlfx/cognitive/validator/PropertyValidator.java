@@ -15,12 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module org.carlfx.cognitive.test {
 
-    requires java.base;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires org.carlfx.cognitive;
+package org.carlfx.cognitive.validator;
 
-    exports org.carlfx.cognitive.test;
+
+
+import org.carlfx.cognitive.viewmodel.ViewModel;
+
+import java.util.function.BiFunction;
+/**
+ * Validator for properties.
+ * @param <T> any JavaFX Property type.
+ */
+public interface PropertyValidator<T> extends BiFunction<T, ViewModel, ValidationMessage> {
 }

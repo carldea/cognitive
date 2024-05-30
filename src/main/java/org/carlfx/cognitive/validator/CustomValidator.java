@@ -15,12 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module org.carlfx.cognitive.test {
 
-    requires java.base;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires org.carlfx.cognitive;
-
-    exports org.carlfx.cognitive.test;
+package org.carlfx.cognitive.validator;
+/**
+ * A custom validator for any properties.
+ */
+public interface CustomValidator extends Validator<Void> {
 }

@@ -15,12 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module org.carlfx.cognitive.test {
 
-    requires java.base;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires org.carlfx.cognitive;
+package org.carlfx.cognitive.validator;
 
-    exports org.carlfx.cognitive.test;
+
+/**
+ * Each validation message has a message type indicating an info, error or warning.
+ */
+public enum MessageType {
+    /**
+     * An informational type message.
+     */
+    INFO,
+    /**
+     * An error type message.
+     */
+    ERROR,
+    /**
+     * A warning type message.
+     */
+    WARN
 }

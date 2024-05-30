@@ -15,12 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module org.carlfx.cognitive.test {
 
-    requires java.base;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires org.carlfx.cognitive;
+package org.carlfx.cognitive.loader;
 
-    exports org.carlfx.cognitive.test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Annotation to mark fields wanting dependency injection of view models into controller classes.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface InjectViewModel {
 }

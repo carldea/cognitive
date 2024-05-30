@@ -15,17 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-module com.carlfx.cognitive {
+/**
+ * Module Cognitive is a JavaFX based MVVM framework capability to decouple presentation logic from controller code.
+ */
+module org.carlfx.cognitive {
     requires java.base;
     requires javafx.fxml;
     requires javafx.graphics;
 
-    opens com.carlfx.cognitive.loader to javafx.fxml;
-    opens com.carlfx.cognitive.validator to javafx.fxml;
-    opens com.carlfx.cognitive.viewmodel to javafx.fxml;
+    opens org.carlfx.cognitive.loader to javafx.fxml;
+    opens org.carlfx.cognitive.validator to javafx.fxml;
+    opens org.carlfx.cognitive.viewmodel to javafx.fxml;
 
-    exports com.carlfx.cognitive.loader;
-    exports com.carlfx.cognitive.validator;
-    exports com.carlfx.cognitive.viewmodel;
+    exports org.carlfx.cognitive.loader;
+    exports org.carlfx.cognitive.validator;
+    exports org.carlfx.cognitive.viewmodel;
 }

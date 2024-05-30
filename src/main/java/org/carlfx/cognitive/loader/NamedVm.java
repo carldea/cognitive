@@ -15,12 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module org.carlfx.cognitive.test {
 
-    requires java.base;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires org.carlfx.cognitive;
+package org.carlfx.cognitive.loader;
 
-    exports org.carlfx.cognitive.test;
+
+import org.carlfx.cognitive.viewmodel.ViewModel;
+
+/**
+ * This represents a variable name and view model referencing an annotated view model inside a controller class.
+ * @param variableName A variable named that's annotated with InjectViewModel.
+ * @param viewModel A view model.
+ */
+public record NamedVm(String variableName, ViewModel viewModel) {
 }

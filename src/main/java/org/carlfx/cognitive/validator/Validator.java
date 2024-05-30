@@ -15,12 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module org.carlfx.cognitive.test {
 
-    requires java.base;
-    requires javafx.fxml;
-    requires javafx.graphics;
-    requires org.carlfx.cognitive;
+package org.carlfx.cognitive.validator;
 
-    exports org.carlfx.cognitive.test;
+
+
+import org.carlfx.cognitive.viewmodel.ViewModel;
+
+import java.util.function.BiFunction;
+
+/**
+ * A validator will valid a view model based on property values or model values. When an error occurs messages are
+ * created to allow a UI developer to display as feedback to the User.
+ * @param <T> Type T is a JavaFX Read-only Property class.
+ */
+public interface Validator<T> extends BiFunction<T, ViewModel, ValidationMessage> {
 }
