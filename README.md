@@ -29,6 +29,11 @@ JavaFX MVC (Model View Controller) has some drawbacks in terms of interactions b
 
 
 As shown above you can treat the JavaFX FXML & Controller class as the **View** and the Model remains the same. The only difference is the ViewModels will contain much of the state and presentation logic.
+
+Let's look at a comparison between a regular controller code to mimic a save operation.
+
+### This is a typical controller without the use of a view model.
+Below is an example of how a UI form is about to save data.
 ```java
 /**
  * User clicks on save button to save contact information.
@@ -41,12 +46,33 @@ private void saveAction(ActionEvent ae) {
    String lastName = lastNameTextField.getText();
    
    // validate user's input
-   
+   // if valid write to database and reset ui.
+
+}
+```
+Now, let's look at how to use a view model in a controller class.
+
+### Using ValidationViewModels in a controller
+To use view models you can have presentation logic or even database calls inside so the view model can be tested without assembling a Controller. A test could populate a view model with the correct values. Remember a view model does not contain any UI controls. The code below is rewritten to use view models.
+
+```java
+@FXML
+private void saveAction(ActionEvent ae) {
+    personViewModel.save(); // validates
+    if (personViewModel.hasErrorMsgs()) {
+       // apply messages to badges or decorate control for fields or global messages.  
+    } else {
+       // view model get model values and has logic to persist data.
+       // personViewModel.write() or personViewModel.save( () -> db.write(...)); 
+    }
 }
 ```
 
-## `SimpleViewModel`
+Now that you see lots of the work is using the view models instead of methods or ui code inside the controller class. The goal is to remove state and presentation logic from the controller class.
 
+Let's look at the two main implementations of the ViewModel interface SimpleViewModel and ValidationViewModel.
+
+## `SimpleViewModel`
 Let's start by creating a `SimpleViewModel` with one property that holds a String such as a first name. The objective is
 to be able to create a JavaFX text field and bind the value with a view model's property.
 
