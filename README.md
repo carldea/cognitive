@@ -1,8 +1,49 @@
 # Cognitive
 A light weight JavaFX (21) forms framework based on the MVVM UI architecture pattern.
 
-View Models maintain the state of a view (Form). In principle view models should contain a controller's presentation logic. 
+View Models maintain the state of a view (Form). In principle view models should contain a controller's presentation logic.
 This allows the developer to test the presentation logic without having to wire up a JavaFX controller during runtime.
+
+# Introduction
+Software developers creating form based applications will inevitably stumble across the single most important UI architectural design pattern [Model View Controller](http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) or **MVC** in short. This concept has paved the way for many frameworks which provide a good (acceptable) [separation of concerns.](http://en.wikipedia.org/wiki/Separation_of_concerns)
+
+However, there are drawbacks to the MVC pattern (especially in JavaFX). One main drawback is that the controller layer can be difficult if not impossible to test. It is especially concerning when you are JavaFX developer who has worked with FXML and controller classes.
+
+The bottom-line issue are UI components, model (data) and presentation logic are coupled inside a controller class. Because UI components are available during runtime it difficult to test interactions (presentation logic) between the model layer and UI.
+
+**So, what is a solution?**
+
+You guessed it! The **MVVM** architecture pattern.
+
+## What is MVVM?
+
+MVVM is an architectural pattern that isolates the business logic/back-end data(Presentation Logic) from the view (UI code). It was designed to simplify user interfaces. According to Wikipedia the [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) is a variation of [Martin Fowler](https://en.wikipedia.org/wiki/Martin_Fowler_(software_engineer))'s [Presentation Model design pattern](https://martinfowler.com/eaaDev/PresentationModel.html).
+
+Next, let's see how to apply the MVVM UI pattern to an existing JavaFX Application
+
+# Converting JavaFX MVC to the MVVM UI pattern
+
+JavaFX MVC (Model View Controller) has some drawbacks in terms of interactions between the UI and Model (domain model). One of the drawbacks are UI elements such as `Button`s and `TextField`s are bound to the View (FXML) and the state of a form.
+
+![Converting_JavaFX_MVC-to-MVVM](https://github.com/carldea/cognitive/assets/1594624/127d1ce4-026f-42d8-b129-8b0f904feacb)
+
+
+As shown above you can treat the JavaFX FXML & Controller class as the **View** and the Model remains the same. The only difference is the ViewModels will contain much of the state and presentation logic.
+```java
+/**
+ * User clicks on save button to save contact information.
+ * @param ae event 
+ */
+@FXML
+private void saveAction(ActionEvent ae) {
+   // copy user's input
+   String firstName = firstNameTextField.getText();
+   String lastName = lastNameTextField.getText();
+   
+   // validate user's input
+   
+}
+```
 
 ## `SimpleViewModel`
 
@@ -36,13 +77,13 @@ Output:
 First name = Fred
 ```
 As you can see when ever a user enters text into the text field the view model's property (first name) gets populated and visa-versa.
-Usually if you have a UI that is read only or no validation needed a `SimpleViewModel` can be used. A form controls bound to properties on a view 
-model you can call the `reset()` method to copy initial model values back into the property values, thus clearing the screen. The `save()` method 
-will copy the property values into the model values layer. For simple UIs you can validate fields manually. 
+Usually if you have a UI that is read only or no validation needed a `SimpleViewModel` can be used. A form controls bound to properties on a view
+model you can call the `reset()` method to copy initial model values back into the property values, thus clearing the screen. The `save()` method
+will copy the property values into the model values layer. For simple UIs you can validate fields manually.
 
 ## `ValidationViewModel`
 
-Next, let's look at ValidationViewModel(s). These allow the developer to add validation to properties. The following example 
+Next, let's look at ValidationViewModel(s). These allow the developer to add validation to properties. The following example
 shows you how to create properties and add validators. These use cases are typically when a user is about to save information. Here they would need to validate before obtaining model values.
 ```java
 final String FIRST_NAME = "firstName";
