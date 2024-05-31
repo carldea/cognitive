@@ -20,7 +20,10 @@ module org.carlfx.cognitive.test {
     requires java.base;
     requires javafx.fxml;
     requires javafx.graphics;
-    requires org.carlfx.cognitive;
+    requires javafx.controls;
 
+    requires org.carlfx.cognitive;
+    opens org.carlfx.cognitive.test.demo to javafx.fxml, org.carlfx.cognitive;
     exports org.carlfx.cognitive.test;
+    exports org.carlfx.cognitive.test.demo;
 }

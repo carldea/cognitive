@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+
+<VBox prefHeight="200.0" prefWidth="100.0" spacing="30.0" styleClass="form" stylesheets="@account-create.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.carlfx.cognitive.test.demo.AccountCreateController">
+   <children>
+      <VBox>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Welcome" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="subtitle" text="Create your account!" />
+         </children>
+      </VBox>
+      <HBox>
+         <children>
+            <TextField fx:id="firstNameTF" maxWidth="1.7976931348623157E308" promptText="First Name" HBox.hgrow="ALWAYS" />
+            <Pane maxHeight="0.0" maxWidth="0.0" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0">
+               <children>
+                  <Button fx:id="firstNameErrorOverlay" layoutX="-20.0" layoutY="15.0" mnemonicParsing="false" styleClass="error-overlay" text="Button">
+                     <tooltip>
+                        <Tooltip fx:id="firstNameTooltip" text="Empty Tooltip" />
+                     </tooltip>
+                  </Button>
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+      <HBox>
+         <children>
+            <TextField fx:id="lastNameTF" maxWidth="1.7976931348623157E308" promptText="Last Name" HBox.hgrow="ALWAYS" />
+            <Pane maxHeight="0.0" maxWidth="0.0" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0">
+               <children>
+                  <Button fx:id="lastNameErrorOverlay" layoutX="-20.0" layoutY="15.0" mnemonicParsing="false" styleClass="error-overlay" text="Button">
+                     <tooltip>
+                        <Tooltip fx:id="lastNameTooltip" text="Empty Tooltip" />
+                     </tooltip>
+                  </Button>
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+      <HBox VBox.vgrow="ALWAYS">
+         <children>
+            <TextField fx:id="emailTF" promptText="Email" HBox.hgrow="ALWAYS" />
+            <Pane maxHeight="0.0" maxWidth="0.0" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0">
+               <children>
+                  <Button fx:id="emailOverlay" layoutX="-20.0" layoutY="15.0" mnemonicParsing="false" styleClass="error-overlay" text="Button">
+                     <tooltip>
+                        <Tooltip fx:id="emailTooltip" text="Empty Tooltip" />
+                     </tooltip>
+                  </Button>
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+      <Button fx:id="submitButton" alignment="CENTER_RIGHT" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#submitAction" styleClass="submit" text="Submit" />
+      <Text fx:id="transactionMessageText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="transaction-message" text="Text" />
+   </children>
+</VBox>

@@ -1,0 +1,92 @@
+.root {
+    -Grey-1: #303245;
+    -Accent-color-yellow: #F3BE00;
+    -Accent-color-orange: #FDAD15;
+    -Accent-color-red: #F04938;
+    -Accent-color-lavender: #956AFF;
+    -Accent-color-blue: #0085FF;
+    -Accent-color-tiffany: #02CACD;
+    -Chip-Accepted-color-green: #00BC62;
+    -Chip-Error-color-red: -Accent-color-red;
+    -Text-hover: #C6DCFF4D;
+    -Hover-light-blue: rgba(198, 220, 255, 0.30);
+
+    -fx-font-family: "Noto Sans";
+}
+
+.form {
+    -fx-background-color: #15172b;
+    -fx-background-radius: 0px;
+    -fx-pref-height: 500px;
+    -fx-padding: 20px;
+    -fx-pref-width: 320px;
+}
+
+.title {
+    -fx-fill: #eee;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 36px;
+    -fx-font-weight: 600;
+}
+
+.subtitle {
+    -fx-fill: #eee;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+.form .text-field {
+    -fx-text-fill: #eee;
+    -fx-pref-height: 50px;
+    -fx-fill: -Grey-1;
+    -fx-font-size: 18px;
+    -fx-stroke-width: 0;
+    -fx-background-color: -Grey-1;
+    -fx-background-insets: 0;
+    -fx-background-radius: 12;
+}
+
+.form .text-field:focused {
+    -fx-text-fill: #eee;
+}
+
+
+.error-overlay {
+    -fx-shape: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z";
+    -fx-background-color: "#de752fce";
+
+    -fx-fill: "#000000";
+    -fx-stroke: "#de752fce";
+    -fx-stroke-width: 1.5;
+    -fx-min-height: 12;
+    -fx-min-width: 12;
+    -fx-max-height: 12;
+    -fx-max-width: 12;
+}
+
+.error-overlay:hover {
+    -fx-background-color: "#de752f";
+}
+
+.form .button.submit {
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
+    -fx-alignment: CENTER;
+
+    -fx-text-fill: #fff;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-style: normal;
+    -fx-font-weight: 600;
+    -fx-pref-height: 50px;
+
+    -fx-background-color: -Accent-color-blue;
+    -fx-background-insets: 0;
+    -fx-background-radius: 12;
+}
+
+.transaction-message {
+    -fx-fill: -Chip-Accepted-color-green;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+}
