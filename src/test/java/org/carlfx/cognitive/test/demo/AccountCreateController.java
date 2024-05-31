@@ -50,7 +50,7 @@ public class AccountCreateController {
     private Text transactionMessageText;
 
     @InjectViewModel
-    ValidationViewModel accountViewModel;
+    AccountViewModel accountViewModel;
 
     @FXML
     public void initialize() {

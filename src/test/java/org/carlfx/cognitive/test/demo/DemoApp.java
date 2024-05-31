@@ -14,9 +14,7 @@ public class DemoApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Demo AccountViewModel");
-        Config config = new Config(this.getClass().getResource("account-create.fxml"));
-        config.addNamedViewModel(new NamedVm("accountViewModel", new AccountViewModel()));
-        JFXNode<Pane, AccountCreateController> jfxNode = FXMLMvvmLoader.make(config);
+        JFXNode<Pane, AccountCreateController> jfxNode = FXMLMvvmLoader.make(this.getClass().getResource("account-create.fxml"));
         Scene scene = new Scene(jfxNode.node());
         stage.setScene(scene);
         stage.show();
