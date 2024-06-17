@@ -120,7 +120,7 @@ public class IdValidationViewModelTest {
                 .addValidator(caseSigConceptRecord.uuid(), "Case significance", (ReadOnlyObjectProperty prop, ViewModel vm) -> {
                     ConceptRecord conceptRecord = (ConceptRecord) prop.get();
                     if (!conceptRecord.uuid().equals(caseCapInitialConcept.uuid())) {
-                        return new ValidationMessage(caseSigConceptRecord.uuid().toString(), MessageType.ERROR, "Case Significance must be ${%s}. Entered as %s ".formatted(caseCapInitialConcept, prop.get()));
+                        return new ValidationMessage(caseSigConceptRecord.uuid().toString(), MessageType.ERROR, "Case Significance must be %s. Entered as %s ".formatted(caseCapInitialConcept, prop.get()));
                     }
                     return VALID;
                 });
@@ -142,39 +142,69 @@ public class IdValidationViewModelTest {
         log("before save " + personVm.debugPropertyMessage(FIRST_NAME));
         personVm.save();
         log("after save " + personVm.debugPropertyMessage(FIRST_NAME));
+        displayErrorMsgs(personVm);
+
         log("--------------");
         personVm.setPropertyValue(AGE, 20);
         log("before save " + personVm.debugPropertyMessage(AGE));
         personVm.save();
         log("after save " + personVm.debugPropertyMessage(AGE));
+        displayErrorMsgs(personVm);
+
         log("--------------");
         personVm.setPropertyValue(PHONE, "222-888-4444");
         log("before save " + personVm.debugPropertyMessage(PHONE));
         personVm.save();
         log("after save " + personVm.debugPropertyMessage(PHONE));
+        displayErrorMsgs(personVm);
+
         log("--------------");
 
         personVm.setPropertyValue(HEIGHT, 5);
         log("before save " + personVm.debugPropertyMessage(HEIGHT));
         personVm.save();
         log("after save " + personVm.debugPropertyMessage(HEIGHT));
+        displayErrorMsgs(personVm);
+
         log("--------------");
 
         personVm.setPropertyValue(MPG, 16.2);
         log("before save " + personVm.debugPropertyMessage(MPG));
         personVm.save();
         log("after save " + personVm.debugPropertyMessage(MPG));
+        displayErrorMsgs(personVm);
+
         log("--------------");
+        personVm.setPropertyValue(spId, "Hello");
+        log("before save " + personVm.debugPropertyMessage(spId.idToString()));
+        personVm.save();
+        log("after save " + personVm.debugPropertyMessage(spId.idToString()));
+        displayErrorMsgs(personVm);
+
+        log("--------------");
+        personVm.setPropertyValue(caseSigConceptRecord.uuid(), caseCapInitialConcept);
+        log("before save " + personVm.debugPropertyMessage(caseSigConceptRecord.uuid().toString()));
+        personVm.save();
+        log("after save " + personVm.debugPropertyMessage(caseSigConceptRecord.uuid().toString()));
+        displayErrorMsgs(personVm);
+
+        log("--------------");
+
+
         log(" Number of errors: " + personVm.getValidationMessages().size());
 
-        for (ValidationMessage vMsg : personVm.getValidationMessages()) {
-            vMsg.interpolate(personVm);
-            System.out.println("msg Type: %s errorcode: %s, msg: %s".formatted(vMsg.messageType(), vMsg.errorCode(), vMsg.interpolate(personVm)) );
-        }
+        displayErrorMsgs(personVm);
 
         log("--------------");
         log(" Assuming there are no errors, the save will commit changes from view props to model values");
         log(" After save -> \n" + personVm);
+    }
+
+    private static void displayErrorMsgs(IdValidationViewModel personVm) {
+        for (ValidationMessage vMsg : personVm.getValidationMessages()) {
+            vMsg.interpolate(personVm);
+            System.out.println("msg Type: %s errorcode: %s, msg: %s".formatted(vMsg.messageType(), vMsg.errorCode(), vMsg.interpolate(personVm)) );
+        }
     }
 
     protected static void log(String message) {
