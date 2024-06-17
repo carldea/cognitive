@@ -18,19 +18,27 @@
 package org.carlfx.cognitive.test;
 
 
+import org.carlfx.cognitive.viewmodel.IdSimpleViewModel;
 import org.carlfx.cognitive.viewmodel.SimplePropertyIdentifier;
 import org.carlfx.cognitive.viewmodel.SimpleViewModel;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-public class SimpleViewModelTest {
+public class IdSimpleViewModelTest {
 
     public static void main(String[] args){
+        UUID uuid = UUID.randomUUID();
+        SimplePropertyIdentifier<UUID, String> spId = new SimplePropertyIdentifier<>("otherName", UUID::fromString, uuid.toString());
+
+        ConceptRecord caseSigConceptRecord = new ConceptRecord(UUID.randomUUID(), "Case Significance", "Case");
+        ConceptRecord caseInsenstiveConcept = new ConceptRecord(UUID.randomUUID(), "Case Insensitive", "Insensitive");
+
         //TextField firstName
-        ViewModel personVm = new SimpleViewModel()
+        IdSimpleViewModel personVm = new IdSimpleViewModel()
                 .addProperty("firstName", "Fred")
                 .addProperty("age", 54l)
                 .addProperty("height", 123)
@@ -42,10 +50,30 @@ public class SimpleViewModelTest {
                         return "thing ";
                     }
                 })
-                .addProperty("mpg", 20.5f);
+                .addProperty("mpg", 20.5f)
+                .addProperty(spId, "hello") // otherName SimplePropertyIdentifier with text as value
+                .addProperty(new ConceptPropertyIdentifier(caseSigConceptRecord), caseInsenstiveConcept); // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
 
         log("--------------");
         log("Creation personVm \n" + personVm);
+
+        // Based on the concept id lookup PropertyIdentifier object.
+        Optional<ConceptPropertyIdentifier> conceptPropertyIdentifierOptional = personVm.findPropertyIdentifierByKey(caseSigConceptRecord.uuid());
+        conceptPropertyIdentifierOptional.ifPresent(conceptPropertyIdentifier -> {
+            System.out.println("========= PropertyIdentifier associated user data =========");
+            System.out.println("   Property Id:" + conceptPropertyIdentifier.idToString());
+            System.out.println(" Property name:" + conceptPropertyIdentifier.getPropertyName());
+            System.out.println("     Full name:" + conceptPropertyIdentifier.fullName());
+            System.out.println("    Short name:" + conceptPropertyIdentifier.getUserData().shortName());
+        });
+        log("--------------");
+        // Change the value to Initial Character capitalize
+        ConceptRecord initialCapConcept = new ConceptRecord(UUID.randomUUID(), "Initial Character capitalize", "Initial cap");
+        personVm.setPropertyValue(caseSigConceptRecord.uuid(), initialCapConcept);
+        log("before save " + personVm.debugPropertyMessage(caseSigConceptRecord.uuid()));
+        personVm.save();
+        log("after save " + personVm.debugPropertyMessage(caseSigConceptRecord.uuid()));
+        log("--------------");
 
         log("--------------");
         personVm.setPropertyValue("firstName", "Mary");
@@ -76,7 +104,7 @@ public class SimpleViewModelTest {
 
         log("--------------");
 
-        ViewModel personVm2 = new SimpleViewModel()
+        IdSimpleViewModel personVm2 = new IdSimpleViewModel()
                 .addProperty("firstName", "Fred")
                 .addProperty("age", 54l)
                 .addProperty("height", 123)
@@ -88,8 +116,9 @@ public class SimpleViewModelTest {
                         return "thing ";
                     }
                 })
-                .addProperty("mpg", 20.5f);
-
+                .addProperty("mpg", 20.5f)
+                .addProperty(spId, "hello") // SimplePropertyIdentifier with text as value
+                .addProperty(new ConceptPropertyIdentifier(caseSigConceptRecord), caseInsenstiveConcept); // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
 
         personVm2.setPropertyValue("firstName", "Mary");
         personVm2.setPropertyValue("age", 20);
@@ -102,6 +131,11 @@ public class SimpleViewModelTest {
                 return "thing 2";
             }
         });
+
+        // New PropertyIdentifier changing values and restoring values.
+        // Change the value to Initial Character capitalize
+        personVm2.setPropertyValue(caseSigConceptRecord.uuid(), initialCapConcept);
+
         log("before reset personVm2 \n" + personVm2);
         personVm2.reset();
         log("after reset  personVm2 \n" + personVm2);

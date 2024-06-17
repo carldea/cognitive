@@ -20,8 +20,10 @@ package org.carlfx.cognitive.validator;
 
 
 import javafx.beans.property.ReadOnlyStringProperty;
+import org.carlfx.cognitive.viewmodel.ViewModel;
+
 /**
  * Validator for String properties.
  */
-public interface StringValidator extends Validator<ReadOnlyStringProperty> {
+public interface StringValidator extends Validator<ReadOnlyStringProperty, ViewModel> {
 }

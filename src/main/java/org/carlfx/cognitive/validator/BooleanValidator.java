@@ -19,9 +19,10 @@
 package org.carlfx.cognitive.validator;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import org.carlfx.cognitive.viewmodel.ViewModel;
 
 /**
  * Validator for boolean properties.
  */
-public interface BooleanValidator extends Validator<ReadOnlyBooleanProperty> {
+public interface BooleanValidator extends Validator<ReadOnlyBooleanProperty, ViewModel> {
 }

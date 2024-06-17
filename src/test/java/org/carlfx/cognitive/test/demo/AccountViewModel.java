@@ -18,6 +18,12 @@ public class AccountViewModel extends ValidationViewModel {
     public static String IS_NOT_POPULATED = "isNotPopulated";
     public static String SUBMIT_BUTTON_STATE = "buttonState";
 
+
+    public final static String ERROR = "error";
+    public final static String FIRST_NAME_ERROR = FIRST_NAME + ERROR;
+    public final static String LAST_NAME_ERROR = LAST_NAME + ERROR;
+    public final static String EMAIL_ERROR = EMAIL + ERROR;
+
     public AccountViewModel () {
         addProperty(FIRST_NAME, "")
                 .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
@@ -69,5 +75,13 @@ public class AccountViewModel extends ValidationViewModel {
             return VALID;
         });
         addProperty(TRANSACTION_TEXT, "");
+
+        addProperty(FIRST_NAME_ERROR, "");
+        addProperty(LAST_NAME_ERROR, "");
+        addProperty(EMAIL_ERROR, "");
+
+    }
+    public void updateErrors(ValidationMessage validationMessage) {
+        setPropertyValue(validationMessage.propertyName() + ERROR, validationMessage.interpolate(this));
     }
 }

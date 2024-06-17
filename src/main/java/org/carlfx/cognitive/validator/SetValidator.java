@@ -20,9 +20,11 @@ package org.carlfx.cognitive.validator;
 
 
 import javafx.beans.property.ReadOnlySetProperty;
+import org.carlfx.cognitive.viewmodel.ViewModel;
+
 /**
  * Validator for a set as a property.
  */
-public interface SetValidator extends Validator<ReadOnlySetProperty> {
+public interface SetValidator extends Validator<ReadOnlySetProperty, ViewModel> {
 
 }

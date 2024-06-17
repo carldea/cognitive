@@ -20,8 +20,10 @@ package org.carlfx.cognitive.validator;
 
 
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import org.carlfx.cognitive.viewmodel.ViewModel;
+
 /**
  * Validator for double properties.
  */
-public interface DoubleValidator extends Validator<ReadOnlyDoubleProperty> {
+public interface DoubleValidator extends Validator<ReadOnlyDoubleProperty, ViewModel> {
 }

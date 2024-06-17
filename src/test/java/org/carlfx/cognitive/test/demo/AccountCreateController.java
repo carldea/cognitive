@@ -110,6 +110,7 @@ public class AccountCreateController {
         emailTooltip.setText("");
         emailOverlay.setVisible(false);
     }
+
     @FXML
     private void submitAction(ActionEvent actionEvent) {
         accountViewModel.save();
@@ -117,9 +118,13 @@ public class AccountCreateController {
             resetErrorOverlays();
             accountViewModel.getValidationMessages().forEach(validationMessage -> {
                 // show overlay and update tooltip
+                accountViewModel.updateErrors(validationMessage);
+
                 System.out.println( validationMessage );
+
                 String propName = validationMessage.propertyName();
                 String message = validationMessage.interpolate(accountViewModel);
+
                 if (FIRST_NAME.equals(propName)) {
                     // concatenate.
                     firstNameTooltip.setText(firstNameTooltip.getText() + message + "\n");

@@ -20,8 +20,10 @@ package org.carlfx.cognitive.validator;
 
 
 import javafx.beans.property.ReadOnlyLongProperty;
+import org.carlfx.cognitive.viewmodel.ViewModel;
+
 /**
  * Validator for long properties.
  */
-public interface LongValidator extends Validator<ReadOnlyLongProperty> {
+public interface LongValidator extends Validator<ReadOnlyLongProperty, ViewModel> {
 }

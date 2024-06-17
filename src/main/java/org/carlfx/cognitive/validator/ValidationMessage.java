@@ -20,7 +20,7 @@ package org.carlfx.cognitive.validator;
 
 
 
-import org.carlfx.cognitive.viewmodel.ValidationViewModel;
+import org.carlfx.cognitive.viewmodel.Validatable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,14 +76,14 @@ public record ValidationMessage(String propertyName, MessageType messageType, in
     /**
      * Used in templates named substitution. Regex to find properties used in message such as ${myProp1}
      */
-    static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{([a-zA-Z\\d\\_]+)\\}");
+    static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{(.+)\\}");
 
     /**
      * Interpolates a string containing property values to substitute.
      * @param vvmodel A validation view model
      * @return A interpolated string
      */
-    public String interpolate(ValidationViewModel vvmodel) {
+    public String interpolate(Validatable vvmodel) {
         Matcher matcher = PROPERTY_PATTERN.matcher(this.message);
         List<String> props = new ArrayList<>();
         String newMessage = this.message;

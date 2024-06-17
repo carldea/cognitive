@@ -20,9 +20,10 @@ package org.carlfx.cognitive.validator;
 
 
 import javafx.beans.property.ReadOnlyFloatProperty;
+import org.carlfx.cognitive.viewmodel.ViewModel;
 
 /**
  * Validator for float properties.
  */
-public interface FloatValidator extends Validator<ReadOnlyFloatProperty> {
+public interface FloatValidator extends Validator<ReadOnlyFloatProperty, ViewModel> {
 }

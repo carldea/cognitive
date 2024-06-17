@@ -17,8 +17,11 @@
  */
 
 package org.carlfx.cognitive.validator;
+
+import org.carlfx.cognitive.viewmodel.ViewModel;
+
 /**
  * A custom validator for any properties.
  */
-public interface CustomValidator extends Validator<Void> {
+public interface CustomValidator extends Validator<Void, ViewModel> {
 }

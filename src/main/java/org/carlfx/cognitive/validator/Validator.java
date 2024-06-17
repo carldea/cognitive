@@ -29,5 +29,5 @@ import java.util.function.BiFunction;
  * created to allow a UI developer to display as feedback to the User.
  * @param <T> Type T is a JavaFX Read-only Property class.
  */
-public interface Validator<T> extends BiFunction<T, ViewModel, ValidationMessage> {
+public interface Validator<T, U extends ViewModel> extends BiFunction<T, U, ValidationMessage> {
 }
