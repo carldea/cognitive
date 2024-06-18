@@ -111,13 +111,6 @@ public class IdSimpleViewModel extends SimpleViewModel {
         );
     }
 
-    @Override
-    public IdSimpleViewModel addProperty(String name, Property property) {
-        return this.addProperty((Object) name, property);
-    }
-    public IdSimpleViewModel addProperty(Object propId, Property property) {
-        return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, property));
-    }
     private void addKeysToPropertyIdMap(PropertyIdentifier propertyIdentifier) {
         Map<?, PropertyIdentifier> map = Map.of(
                 propertyIdentifier, propertyIdentifier,
@@ -126,13 +119,6 @@ public class IdSimpleViewModel extends SimpleViewModel {
                 propertyIdentifier.getPropertyName(), propertyIdentifier
         );
         getPropertyIdLookupMap().putAll(map);
-    }
-    @Override
-    public IdSimpleViewModel addProperty(String name, String value) {
-        return this.addProperty((Object) name, value);
-    }
-    public IdSimpleViewModel addProperty(Object propId, String value) {
-        return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 
     /**
@@ -150,16 +136,12 @@ public class IdSimpleViewModel extends SimpleViewModel {
                 ()-> propName.accept(String.valueOf(propId))); /* else */
         return this;
     }
-    protected IdSimpleViewModel ifNotPresentAddPropertyId(Object propId,
+    protected IdSimpleViewModel ifNotPresentAddPropertyId(PropertyIdentifier propId,
                                            Consumer<String> consumer) {
         Optional<PropertyIdentifier> propertyIdentifier = findPropertyIdentifierByKey(propId);
         if (propertyIdentifier.isEmpty()) {
-            if (propId instanceof PropertyIdentifier propertyIdentifier1) {
-                addKeysToPropertyIdMap(propertyIdentifier1);
-                consumer.accept(propertyIdentifier1.idToString());
-            } else {
-                consumer.accept(String.valueOf(propId));
-            }
+                addKeysToPropertyIdMap(propId);
+                consumer.accept(propId.idToString());
         } else {
             consumer.accept(propertyIdentifier.get().idToString());
         }
@@ -176,70 +158,80 @@ public class IdSimpleViewModel extends SimpleViewModel {
     }
 
     @Override
-    public IdSimpleViewModel addProperty(String name, int value) {
-        this.addProperty((Object) name, value);
-        return this;
+    public IdSimpleViewModel addProperty(String name, Property property) {
+        return super.addProperty(name, property);
     }
-    public IdSimpleViewModel addProperty(Object propId, int value) {
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, Property property) {
+        return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, property));
+    }
+    @Override
+    public IdSimpleViewModel addProperty(String name, String value) {
+        return super.addProperty(name, value);
+    }
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, String value) {
+        return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(String name, int value) {
+        return super.addProperty(name, value);
+    }
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, int value) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 
     @Override
     public IdSimpleViewModel addProperty(String name, long value) {
-        this.addProperty((Object) name, value);
-        return this;
+        return super.addProperty(name, value);
     }
-    public IdSimpleViewModel addProperty(Object propId, long value) {
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, long value) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 
     @Override
     public IdSimpleViewModel addProperty(String name, float value) {
-        this.addProperty((Object) name, value);
-        return this;
+        return super.addProperty(name, value);
     }
-    public IdSimpleViewModel addProperty(Object propId, float value) {
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, float value) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 
     @Override
     public IdSimpleViewModel addProperty(String name, double value) {
-        this.addProperty((Object) name, value);
-        return this;
+        return super.addProperty(name, value);
     }
-    public IdSimpleViewModel addProperty(Object propId, double value) {
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, double value) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 
     @Override
     public IdSimpleViewModel addProperty(String name, boolean value) {
-        return this.addProperty((Object)name, value);
+        return super.addProperty(name, value);
     }
-    public IdSimpleViewModel addProperty(Object propId, boolean value) {
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, boolean value) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 
     @Override
     public IdSimpleViewModel addProperty(String name, Collection value) {
-        return this.addProperty((Object) name, value);
+        return super.addProperty(name, value);
     }
-    public IdSimpleViewModel addProperty(Object propId, Collection value) {
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, Collection value) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 
-
     @Override
     public IdSimpleViewModel addProperty(String name, Collection value, boolean skip) {
-        return this.addProperty((Object) name, value, skip);
+        return super.addProperty(name, value, skip);
     }
-    public IdSimpleViewModel addProperty(Object propId, Collection value, boolean skip) {
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, Collection value, boolean skip) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value, skip));
     }
     @Override
     public IdSimpleViewModel addProperty(String name, Object value) {
-        return this.addProperty((Object) name, value);
+        return super.addProperty(name, value);
     }
-    public IdSimpleViewModel addProperty(Object propId, Object value) {
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, Object value) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 

@@ -30,6 +30,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.carlfx.cognitive.validator.MessageType.ERROR;
 import static org.carlfx.cognitive.viewmodel.ValidationViewModel.VALID;
 
 public class IdValidationViewModelTest {
@@ -49,20 +50,18 @@ public class IdValidationViewModelTest {
         ConceptRecord caseSigConceptRecord = new ConceptRecord(UUID.randomUUID(), "Case Significance", "Case");
         ConceptRecord caseInsenstiveConcept = new ConceptRecord(UUID.randomUUID(), "Case Insensitive", "Insensitive");
         ConceptRecord caseCapInitialConcept = new ConceptRecord(UUID.randomUUID(), "Capitalize initial character", "Cap 1st Character");
-        IdValidationViewModel personVm4 = new IdValidationViewModel();
-
 
         IdValidationViewModel personVm =  new IdValidationViewModel()
                 .addProperty(FIRST_NAME, "")
                 .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
                     if (prop.isEmpty().get()) {
-                        return new ValidationMessage(FIRST_NAME, MessageType.ERROR, "${%s} is required".formatted(FIRST_NAME));
+                        return new ValidationMessage(FIRST_NAME, ERROR, "${%s} is required".formatted(FIRST_NAME));
                     }
                     return VALID;
                 })
                 .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
                     if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
-                        return new ValidationMessage(FIRST_NAME, MessageType.ERROR, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
+                        return new ValidationMessage(FIRST_NAME, ERROR, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
                     }
                     return VALID;
                 })
@@ -72,7 +71,7 @@ public class IdValidationViewModelTest {
                     Pattern pattern = Pattern.compile("([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})");
                     Matcher matcher = pattern.matcher(ph);
                     if (!matcher.matches()) {
-                        return new ValidationMessage(PHONE, MessageType.ERROR, "${%s} must be formatted XXX-XXX-XXXX. Entered as %s".formatted(PHONE, ph));
+                        return new ValidationMessage(PHONE, ERROR, "${%s} must be formatted XXX-XXX-XXXX. Entered as %s".formatted(PHONE, ph));
                     }
                     return VALID;
                 })
@@ -80,7 +79,7 @@ public class IdValidationViewModelTest {
                 .addProperty("height", 11)
                 .addValidator(HEIGHT, "Height", (ReadOnlyIntegerProperty prop, ViewModel vm) -> {
                     if (prop.get() < 1 || prop.get() > 10) {
-                        return new ValidationMessage(HEIGHT, MessageType.ERROR, "${%s} must be in range 1-10. Entered as %s ".formatted(HEIGHT, prop.get()));
+                        return new ValidationMessage(HEIGHT, ERROR, "${%s} must be in range 1-10. Entered as %s ".formatted(HEIGHT, prop.get()));
                     }
                     return VALID;
                 })
@@ -95,7 +94,7 @@ public class IdValidationViewModelTest {
                 .addProperty(MPG, 20.5f)
                 .addValidator(MPG, "Miles Per Gallon", (ReadOnlyFloatProperty prop, ViewModel vm) -> {
                     if (prop.get() < 1.0 || prop.get() > 20) {
-                        return new ValidationMessage(MPG, MessageType.ERROR, "${%s} must be in range 1.0 - 20.0. Entered as %s ".formatted(MPG, prop.get()));
+                        return new ValidationMessage(MPG, ERROR, "${%s} must be in range 1.0 - 20.0. Entered as %s ".formatted(MPG, prop.get()));
                     }
                     return VALID;
                 })
@@ -103,12 +102,12 @@ public class IdValidationViewModelTest {
                     FloatProperty mpg = vm.getProperty(MPG);
 
                     if (mpg.get() < 1.0 || mpg.get() > 20) {
-                        return new ValidationMessage(MPG, MessageType.ERROR, "${%s} must be in range 1.0 - 20.0. Entered as %s ".formatted(CUSTOM_PROP, mpg.get()));
+                        return new ValidationMessage(MPG, ERROR, "${%s} must be in range 1.0 - 20.0. Entered as %s ".formatted(CUSTOM_PROP, mpg.get()));
                     }
                     return VALID;
                 })
                 .addProperty(spId, "hello") // otherName SimplePropertyIdentifier with text as value
-                .addValidator(spId.idToString(), "Other Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(spId.getPropertyName(), "Other Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
                     String firstChar = vm.getPropertyValue(spId.idToString()).toString().substring(0, 1);
                     if (!(firstChar.toUpperCase().equals(firstChar))) {
                         return new ValidationMessage(spId.idToString(), MessageType.ERROR, "${%s} first character must be capitalized. Entered as %s ".formatted(spId.idToString(), prop.get()));
@@ -116,11 +115,25 @@ public class IdValidationViewModelTest {
 
                     return VALID;
                 })
+                .addProperty(new SimplePropertyIdentifier("brainPower", (id) -> id.toString().hashCode(), "brain power 1" ), 6l) // otherName SimplePropertyIdentifier with text as value
+                .addValidator("brainPower", "Brain power", (ReadOnlyLongProperty prop, ViewModel vm) ->
+                    prop.get() >= 5 ? new ValidationMessage("brainPower", ERROR, 401, "${brainPower} must be less than 5") : VALID
+                )
                 .addProperty(new ConceptPropertyIdentifier(caseSigConceptRecord), caseInsenstiveConcept) // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
+//                .addProperty(new ConceptPropertyIdentifier(caseSigConceptRecord), (Object) null) // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
+//                .addValidator(caseSigConceptRecord.uuid(), "Case significance", (ReadOnlyObjectProperty prop, ViewModel vm) -> {
+//                    if (prop.isNotNull().get()) {
+//                        ConceptRecord conceptRecord = (ConceptRecord) prop.get();
+//                        if (!conceptRecord.uuid().equals(caseCapInitialConcept.uuid())) {
+//                            return new ValidationMessage(caseSigConceptRecord.uuid().toString(), MessageType.ERROR, "Case Significance must be %s. Entered as %s ".formatted(caseCapInitialConcept, prop.get()));
+//                        }
+//                        return VALID;
+//                    }
+//                    return VALID;
+//                })
                 .addValidator(caseSigConceptRecord.uuid(), "Case significance", (ReadOnlyObjectProperty prop, ViewModel vm) -> {
-                    ConceptRecord conceptRecord = (ConceptRecord) prop.get();
-                    if (!conceptRecord.uuid().equals(caseCapInitialConcept.uuid())) {
-                        return new ValidationMessage(caseSigConceptRecord.uuid().toString(), MessageType.ERROR, "Case Significance must be %s. Entered as %s ".formatted(caseCapInitialConcept, prop.get()));
+                    if (prop.isNull().get()) {
+                        return new ValidationMessage(caseSigConceptRecord.uuid().toString(), ERROR, "Case Significance must be populated. Set to null ");
                     }
                     return VALID;
                 });
@@ -202,7 +215,6 @@ public class IdValidationViewModelTest {
 
     private static void displayErrorMsgs(IdValidationViewModel personVm) {
         for (ValidationMessage vMsg : personVm.getValidationMessages()) {
-            vMsg.interpolate(personVm);
             System.out.println("msg Type: %s errorcode: %s, msg: %s".formatted(vMsg.messageType(), vMsg.errorCode(), vMsg.interpolate(personVm)) );
         }
     }

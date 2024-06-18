@@ -6,7 +6,7 @@ import org.carlfx.cognitive.validator.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class IdValidationViewModel extends IdSimpleViewModel implements Validatable {
@@ -28,8 +28,8 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     }
 
     @Override
-    public IdValidationViewModel addProperty(Object name, Property property) {
-        super.addProperty(name, property);
+    public IdValidationViewModel addProperty(PropertyIdentifier propertyIdentifier, Property property) {
+        super.addProperty(propertyIdentifier, property);
         return this;
     }
     /**
@@ -45,7 +45,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     }
 
     @Override
-    public IdValidationViewModel addProperty(Object name, String value) {
+    public IdValidationViewModel addProperty(PropertyIdentifier name, String value) {
         super.addProperty(name, value);
         return this;
     }
@@ -63,7 +63,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     }
 
     @Override
-    public IdValidationViewModel addProperty(Object name, int value) {
+    public IdValidationViewModel addProperty(PropertyIdentifier name, int value) {
         super.addProperty(name, value);
         return this;
     }
@@ -80,7 +80,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     }
 
     @Override
-    public IdValidationViewModel addProperty(Object name, long value) {
+    public IdValidationViewModel addProperty(PropertyIdentifier name, long value) {
         super.addProperty(name, value);
         return this;
     }
@@ -96,7 +96,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
         return this;
     }
     @Override
-    public IdValidationViewModel addProperty(Object name, float value) {
+    public IdValidationViewModel addProperty(PropertyIdentifier name, float value) {
         super.addProperty(name, value);
         return this;
     }
@@ -111,7 +111,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addProperty(String name, double value) {
         return this.addProperty(name, value);
     }
-    public IdValidationViewModel addProperty(Object name, double value) {
+    public IdValidationViewModel addProperty(PropertyIdentifier name, double value) {
         super.addProperty(name, value);
         return this;
     }
@@ -129,7 +129,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     }
 
     @Override
-    public IdValidationViewModel addProperty(Object name, boolean value) {
+    public IdValidationViewModel addProperty(PropertyIdentifier name, boolean value) {
         super.addProperty(name, value);
         return this;
     }
@@ -146,7 +146,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     }
 
     @Override
-    public IdValidationViewModel addProperty(Object name, Collection value) {
+    public IdValidationViewModel addProperty(PropertyIdentifier name, Collection value) {
         super.addProperty(name, value);
         return this;
     }
@@ -163,8 +163,8 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     }
 
     @Override
-    public IdValidationViewModel addProperty(Object name, Object value) {
-        super.addProperty(name, value);
+    public IdValidationViewModel addProperty(PropertyIdentifier propertyIdentifier, Object value) {
+        super.addProperty(propertyIdentifier, value);
         return this;
     }
 
@@ -255,7 +255,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public <V extends ViewModel> IdValidationViewModel addValidator(Object name, String friendlyName, StringValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -268,7 +268,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, BooleanValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -280,7 +280,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, IntegerValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -292,7 +292,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, LongValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -304,7 +304,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, FloatValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -316,7 +316,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, DoubleValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -328,7 +328,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, ObjectValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -340,7 +340,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, ListValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -352,7 +352,7 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, SetValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
@@ -364,15 +364,11 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(Object name, String friendlyName, CustomValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
-                propName -> getValidationManager().createFieldValidator(String.valueOf(name), friendlyName, validator)
+                propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
         );
         return this;
     }
 
-//    public IdSimpleViewModel addValidator(PropertyIdentifier propId, String friendlyName, Validator validator) {
-//        getValidationManager().createFieldValidator(propId.idToString(), friendlyName, validator);
-//        return this;
-//    }
     @Override
     public IdValidationViewModel validate() {
         validationManager.validate(this);
@@ -416,6 +412,17 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
         return (IdValidationViewModel) super.save();
     }
 
+    @Override
+    public String getFriendlyName(String propertName) {
+        return this.getFriendlyName((Object) propertName);
+    }
+    public String getFriendlyName(Object propertName) {
+        Optional<PropertyIdentifier> propertyIdentifier = findPropertyIdentifierByKey(propertName);
+        if (propertyIdentifier.isPresent()) {
+            return Validatable.super.getFriendlyName(propertyIdentifier.get().idToString());
+        }
+        return Validatable.super.getFriendlyName(String.valueOf(propertName));
+    }
 
     /**
      * Overridden toString() to output data for debugging.
