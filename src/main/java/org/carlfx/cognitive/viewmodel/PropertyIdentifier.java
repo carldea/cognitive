@@ -17,6 +17,11 @@ public interface PropertyIdentifier<T, U>{
      * @return Returns the user data set into this object.
      */
     U getUserData();
+
+    /**
+     * Returns the property name. This follows the original view model interface to make use of a property name (String) to lookup and set property and model values.
+     * @return Returns the property name.
+     */
     String getPropertyName();
     /**
      * Compares other PropertyIdentifier instances for equality.
@@ -35,6 +40,10 @@ public interface PropertyIdentifier<T, U>{
         return getPropertyId().hashCode();
     }
 
+    /**
+     * Returns the property id as a String value.
+     * @return Returns the property id as a String value.
+     */
     default String idToString() {
         return getPropertyId().toString();
     }

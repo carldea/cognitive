@@ -1,6 +1,5 @@
 package org.carlfx.cognitive.validator;
 
-import javafx.beans.property.Property;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
 import java.util.ArrayList;
@@ -8,12 +7,28 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *  A validation manager is responsible for evaluating validators and producing validation messages.
+ *  Each validation messages can be warnings, errors, and info type messages. Validation messages are considered global or field based.
+ *  When used in a field in a form-based UI messages can be applied beside UI control to provide the user feedback.
+ *
+ *  When creating validators validation messages can be more human-readable by using and substituting the property name with a friendly name.
+ *
+ * @see org.carlfx.cognitive.viewmodel.IdValidationViewModel
+ * @see org.carlfx.cognitive.viewmodel.ValidationViewModel
+ */
 public class ValidationManager {
     private final Map<String, String> friendlyNameMap = new LinkedHashMap<>();
     private Map<String, List<Validator<?, ViewModel>>> validatorsMap = new LinkedHashMap<>();
 
     private List<ValidationMessage> validationMessages = new ArrayList<>();
 
+    /**
+     * Default constructor.
+     */
+    public ValidationManager() {
+        super();
+    }
     /**
      * Allows derived classes to create field (property) validators.
      * @param name Property name
@@ -59,12 +74,18 @@ public class ValidationManager {
         return validatorsMap.get(name);
     }
     /**
-     * Invalidate or clear error messages.
-     * @return itself
+     * Invalidate or clear all validation messages.
+     *
      */
     public void invalidate() {
         getValidationMessages().clear();
     }
+
+    /**
+     * Returns a list of ValidationMessage objects after validation occurs on validators.
+     * @param viewModel A view model to validate against.
+     * @return Returns a list of ValidationMessage objects after validation occurs on validators.
+     */
     public List<ValidationMessage> validate(ViewModel viewModel) {
         validationMessages.clear();
         // with each property contain a validator eval and build validation messages.
@@ -149,6 +170,12 @@ public class ValidationManager {
         return !hasInfoMsgs();
     }
 
+
+    /**
+     * Returns true when validation messages exist of type <code>MessageType</code> (error, warn, info), otherwise false.
+     * @param type The type can be an error, warning or information message type.
+     * @return Returns true when validation messages exist of type <code>MessageType</code> (error, warn, info), otherwise false.
+     */
     public boolean hasMsgType(MessageType type){
         if (getValidationMessages() != null) {
             return getValidationMessages().stream().filter(msg -> msg.messageType() == type).findAny().isPresent();
@@ -164,6 +191,10 @@ public class ValidationManager {
         return friendlyNameMap.get(propertName);
     }
 
+    /**
+     * Returns a map of property names to friendly names.
+     * @return a map of property names to friendly names.
+     */
     public Map<String, String> getFriendlyNameMap() {
         return friendlyNameMap;
     }

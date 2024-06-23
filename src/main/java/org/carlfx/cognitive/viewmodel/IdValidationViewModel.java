@@ -9,9 +9,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class IdValidationViewModel extends IdSimpleViewModel implements Validatable {
+/**
+ * A validation view model supporting both PropertyIdentifier objects and property names (as type string). An ID validation view model manages validation rules for associated view properties and global type validations.
+ * Use cases are the following:
+ * <pre>
+ *     1. Fields are required (not null or not empty string).
+ *     2. Field has required input format. e.g. US Phone number format.
+ *     3. Range values must be in(within) or outside of range. e.g. Date range or 1-100.
+ *     4. Course grain or transactional type errors such as a Duplicate or Unknown (Runtime Exceptions). e.g. Already saved.
+ * </pre>
+ */public class IdValidationViewModel extends IdSimpleViewModel implements Validatable {
     private ValidationManager validationManager = new ValidationManager();
 
+    /**
+     * Default constructor.
+     */
     public IdValidationViewModel() {
         super();
     }
@@ -252,7 +264,16 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, StringValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
-    public <V extends ViewModel> IdValidationViewModel addValidator(Object name, String friendlyName, StringValidator validator) {
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype
+     * @return IdValidationViewModel itself.
+     *
+     */
+    public IdValidationViewModel addValidator(Object name, String friendlyName, StringValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
                 propName -> getValidationManager().createFieldValidator(propName, friendlyName, validator)
@@ -265,6 +286,14 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
         return this.addValidator((Object) name, friendlyName, validator);
     }
 
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype Boolean
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, BooleanValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -277,6 +306,15 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, IntegerValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype of Integer.
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, IntegerValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -289,6 +327,15 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, LongValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype Long.
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, LongValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -301,6 +348,15 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, FloatValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype Float.
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, FloatValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -313,6 +369,15 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, DoubleValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype Double.
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, DoubleValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -325,6 +390,15 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, ObjectValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype Object.
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, ObjectValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -337,6 +411,15 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, ListValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype List
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, ListValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -349,6 +432,15 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, SetValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on datatype of Set.
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, SetValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -361,6 +453,15 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public IdValidationViewModel addValidator(String name, String friendlyName, CustomValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
+
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator a custom validator.
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, CustomValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> getValidationManager().createFieldValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -416,6 +517,12 @@ public class IdValidationViewModel extends IdSimpleViewModel implements Validata
     public String getFriendlyName(String propertName) {
         return this.getFriendlyName((Object) propertName);
     }
+
+    /**
+     * Returns the friendly name to be used instead of property name.
+     * @param propertName The property name or property id is used to look up friendly name.
+     * @return Returns the friendly name to be used instead of property name.
+     */
     public String getFriendlyName(Object propertName) {
         Optional<PropertyIdentifier> propertyIdentifier = findPropertyIdentifierByKey(propertName);
         if (propertyIdentifier.isPresent()) {

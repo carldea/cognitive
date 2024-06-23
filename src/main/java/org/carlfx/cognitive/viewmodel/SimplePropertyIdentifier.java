@@ -23,6 +23,18 @@ public class SimplePropertyIdentifier<T, U> implements PropertyIdentifier {
         this.userData = userData;
         this.propertyIdFunctor = propertyIdFunctor;
     }
+
+    /**
+     * Constructor receiving a Function responsible for returning the property id based on the user data object.
+     * An example is the following:
+     * <pre>
+     *     // Property Id is of type UUID, user data object is a String.
+     *     SimplePropertyIdentifier&lt;UUID, String&gt;> spId = new SimplePropertyIdentifier&lt;&gt;(UUID::fromString, UUID.randomUUID().toString());
+     *
+     * </pre>
+     * @param propertyIdFunctor a function to return the unique id (property id) from the user data object.
+     * @param userData A user data type object containing a unique identifier value.
+     */
     public SimplePropertyIdentifier (Function<U, T> propertyIdFunctor, U userData) {
         this.userData = userData;
         this.propertyIdFunctor = propertyIdFunctor;

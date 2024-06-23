@@ -385,6 +385,12 @@ public class SimpleViewModel implements ViewModel {
     public <T extends Property> T getProperty(String name) {
         return (T) singleValueMap.get(name);
     }
+
+    /**
+     * Removes property and model values.
+     * @param name property name
+     * @return Returns the Property that was removed based on property name lookup.
+     */
     public Property removeProperty(String name) {
         valueMap.remove(name);
         return singleValueMap.remove(name);

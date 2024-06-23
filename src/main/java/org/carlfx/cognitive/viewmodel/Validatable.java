@@ -4,11 +4,19 @@ import org.carlfx.cognitive.validator.*;
 
 import java.util.List;
 
+/**
+ * The Validatable interface provides the validation behavior for Validation Model. These methods primarily are a pass through or a delegate to invoke similar methods on the validation manager.
+ */
 public interface Validatable {
     /**
      * When validators are successful (no errors, warnings, infos) Valid is returned.
      */
     ValidationMessage VALID = null;
+
+    /**
+     * Returns the validation manager.
+     * @return Returns the validation manager.
+     */
     ValidationManager getValidationManager();
     /**
      * Allows derived classes to create global type validators.
