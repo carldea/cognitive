@@ -21,6 +21,7 @@ import javafx.beans.property.*;
 import org.carlfx.cognitive.validator.MessageType;
 import org.carlfx.cognitive.validator.ValidationMessage;
 import org.carlfx.cognitive.viewmodel.IdValidationViewModel;
+import org.carlfx.cognitive.viewmodel.PropertyIdentifier;
 import org.carlfx.cognitive.viewmodel.SimplePropertyIdentifier;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
@@ -45,7 +46,7 @@ public class IdValidationViewModelTest {
         final String MPG = "mpg";
         final String CUSTOM_PROP = "customProp";
         UUID uuid = UUID.randomUUID();
-        SimplePropertyIdentifier<UUID, String> spId = new SimplePropertyIdentifier<>("otherName", UUID::fromString, uuid.toString());
+        PropertyIdentifier<UUID, String> spId = new SimplePropertyIdentifier<>("otherName", UUID::fromString, uuid.toString());
 
         ConceptRecord caseSigConceptRecord = new ConceptRecord(UUID.randomUUID(), "Case Significance", "Case");
         ConceptRecord caseInsenstiveConcept = new ConceptRecord(UUID.randomUUID(), "Case Insensitive", "Insensitive");
@@ -108,12 +109,12 @@ public class IdValidationViewModelTest {
                 })
                 .addProperty(spId, "hello") // otherName SimplePropertyIdentifier with text as value
                 .addValidator(spId.getPropertyName(), "Other Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
-                    String firstChar = vm.getPropertyValue(spId.idToString()).toString().substring(0, 1);
-                    if (!(firstChar.toUpperCase().equals(firstChar))) {
-                        return new ValidationMessage(spId.idToString(), MessageType.ERROR, "${%s} first character must be capitalized. Entered as %s ".formatted(spId.idToString(), prop.get()));
-                    }
+                    String firstChar = prop.get().substring(0,1);
+                    if (firstChar.toUpperCase().equals(firstChar))
+                        return VALID;
 
-                    return VALID;
+                    return new ValidationMessage(spId.idToString(), MessageType.ERROR, "${%s} first character must be capitalized. Entered as %s ".formatted(spId.idToString(), prop.get()));
+
                 })
                 .addProperty(new SimplePropertyIdentifier("brainPower", (id) -> id.toString().hashCode(), "brain power 1" ), 6l) // otherName SimplePropertyIdentifier with text as value
                 .addValidator("brainPower", "Brain power", (ReadOnlyLongProperty prop, ViewModel vm) ->
