@@ -81,7 +81,7 @@ The MVVM UI pattern is a variation of the [Presentation Model Pattern](https://m
 
 What's important is that the `ViewModel` manages the state. Later, we'll look at how to bind data between the View and ViewModel to synchronize model data.
 
-The following is how MVVM is normally depected:
+The following is how MVVM is normally depicted:
 
 ![mvvm-ui-pattern](https://github.com/carldea/cognitive/assets/1594624/6e290bc4-2b5e-475f-991f-291b196e207f)
 
