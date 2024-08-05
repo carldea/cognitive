@@ -19,11 +19,8 @@
 package org.carlfx.cognitive.validator;
 
 
-
 import org.carlfx.cognitive.viewmodel.Validatable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,13 +82,11 @@ public record ValidationMessage(String propertyName, MessageType messageType, in
      */
     public String interpolate(Validatable vvmodel) {
         Matcher matcher = PROPERTY_PATTERN.matcher(this.message);
-        List<String> props = new ArrayList<>();
         String newMessage = this.message;
         while (matcher.find()) {
             String subPropName = matcher.group();
             String propName = matcher.group(1);
-            props.add(matcher.group());
-            String friendlyName =vvmodel.getFriendlyName(propName);
+            String friendlyName = vvmodel.getFriendlyName(propName);
             if (friendlyName != null) {
                 newMessage = newMessage.replace(subPropName, friendlyName);
             }

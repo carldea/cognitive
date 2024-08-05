@@ -21,7 +21,9 @@ package org.carlfx.cognitive.viewmodel;
 import javafx.beans.property.Property;
 import org.carlfx.cognitive.validator.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -323,8 +325,58 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      *
      */
     public ValidationViewModel addValidator(String name, String friendlyName, CustomValidator validator) {
-        validationManager.createFieldValidator(name, friendlyName, validator);
+        getValidationManager().createFieldValidator(name, friendlyName, validator);
         return this;
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, BooleanConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, DoubleConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, FloatConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, IntegerConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, ListConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, LongConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, ObjectConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, SetConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, StringConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(String name, String friendlyName, ConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
     }
 
     /**

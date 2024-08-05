@@ -20,6 +20,7 @@ package org.carlfx.cognitive.test.demo;
 import javafx.beans.property.ReadOnlyStringProperty;
 import org.carlfx.cognitive.validator.MessageType;
 import org.carlfx.cognitive.validator.ValidationMessage;
+import org.carlfx.cognitive.validator.ValidationResult;
 import org.carlfx.cognitive.viewmodel.ValidationViewModel;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
@@ -49,11 +50,14 @@ public class AccountViewModel extends ValidationViewModel {
                     }
                     return VALID;
                 })
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel viewModel) -> {
                     if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
-                        return new ValidationMessage(FIRST_NAME, MessageType.ERROR, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
+                        validationResult.error(FIRST_NAME, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
                     }
-                    return VALID;
+                    String firstChar = String.valueOf(prop.get().charAt(0));
+                    if (firstChar.equals(firstChar.toLowerCase())) {
+                        validationResult.error(FIRST_NAME, "${%s} first character must be upper case.".formatted(FIRST_NAME));
+                    }
                 });
 
         addProperty(LAST_NAME, "")

@@ -17,6 +17,7 @@
  */
 package org.carlfx.cognitive.viewmodel;
 
+import javafx.beans.property.*;
 import org.carlfx.cognitive.validator.*;
 
 import java.util.List;
@@ -141,6 +142,176 @@ public interface Validatable {
     <U extends ViewModel> U addValidator(String name, String friendlyName, CustomValidator validator);
 
     /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the boolean property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, BooleanConsumerValidator validator){
+        BooleanValidator tValidator = (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, tValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the double property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, DoubleConsumerValidator validator){
+        DoubleValidator tValidator = (ReadOnlyDoubleProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, tValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the float property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, FloatConsumerValidator validator){
+        FloatValidator tValidator = (ReadOnlyFloatProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, tValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the integer property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, IntegerConsumerValidator validator){
+        IntegerValidator tValidator = (ReadOnlyIntegerProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, tValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the list as a read-only property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, ListConsumerValidator validator){
+        ListValidator tValidator = (ReadOnlyListProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, tValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the Long as a read-only property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, LongConsumerValidator validator){
+        LongValidator tValidator = (ReadOnlyLongProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, tValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the object as a read-only property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, ObjectConsumerValidator validator){
+        ObjectValidator tValidator = (ReadOnlyObjectProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, tValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the set as a read-only property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, SetConsumerValidator validator){
+        SetValidator tValidator = (ReadOnlySetProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, tValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual typed Validator.
+     * As a convenience the string as a read-only property is passed in to be used.
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, StringConsumerValidator validator){
+        StringValidator stringValidator = (ReadOnlyStringProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        getValidationManager().createFieldValidator(name, friendlyName, stringValidator);
+        return (U) this;
+    }
+
+    /**
+     * A consumer validator creates a validator that allows the code to eval validation logic and can generate multiple error messages.
+     * This consumer validator is converted to an actual custom validator.
+     *
+     * @param name Property name
+     * @param friendlyName Friendly name of property name
+     * @param validator consumer validator converts to an actual type validator.
+     *                  e.g. CustomValidator customValidator = (Void prop, ViewModel vm) -> accumulateMessagesFunction(name, validator);
+     * @return returns itself following the builder pattern.
+     * @param <U> U is a derived class of type ViewModel.
+     */
+    default <U extends ViewModel> U addValidator(String name, String friendlyName, ConsumerValidator validator){
+        CustomValidator customValidator = (Void prop, ViewModel vm) -> accumulateMessagesFunction(name, validator);
+        getValidationManager().createFieldValidator(name, friendlyName, customValidator);
+        return (U) this;
+    }
+
+    /**
      * Goes through all validators to execute creating error, warning, info
      * @return Returns a ViewModel following the builder pattern.
      * @param <U> U is a view model of type ViewModel
@@ -229,4 +400,36 @@ public interface Validatable {
         return getValidationManager().getFriendlyName(propertName);
     }
 
+    /**
+     * Based on the property name, consumer validator will pass caller an empty validation result (no messages).
+     * @param name Property name
+     * @param validator Consumer validator allows caller to add messages to validation result object.
+     * @param prop the property as a read-only
+     * @return ValidationMessage will be null or VALID. Messages will be in validation result.
+     */
+    default ValidationMessage accumulateMessagesFunction(String name, TypeConsumerValidator validator, ReadOnlyProperty prop) {
+        ValidationResult inputValidationResult = new ValidationResult(name);
+        // accumulate error messages
+        validator.accept(prop, inputValidationResult, this);
+        getValidationManager()
+                .getValidationMessages()
+                .addAll(inputValidationResult.getMessages());
+        return VALID;
+    }
+
+    /**
+     * Based on the property name, consumer validator will pass caller an empty validation result (no messages).
+     * @param name Property name
+     * @param validator Consumer validator allows caller to add messages to validation result object.
+     * @return ValidationMessage will be null or VALID. Messages will be in validation result.
+     */
+    default ValidationMessage accumulateMessagesFunction(String name, ConsumerValidator validator) {
+        ValidationResult inputValidationResult = new ValidationResult(name);
+        // accumulate error messages
+        validator.accept(inputValidationResult, (ViewModel) this);
+        getValidationManager()
+                .getValidationMessages()
+                .addAll(inputValidationResult.getMessages());
+        return VALID;
+    }
 }
