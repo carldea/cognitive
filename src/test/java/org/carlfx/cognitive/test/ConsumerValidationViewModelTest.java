@@ -21,8 +21,8 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ReadOnlyFloatProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
-import org.carlfx.cognitive.validator.MessageType;
 import org.carlfx.cognitive.validator.ValidationMessage;
+import org.carlfx.cognitive.validator.ValidationResult;
 import org.carlfx.cognitive.viewmodel.ValidationViewModel;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
@@ -31,9 +31,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.carlfx.cognitive.viewmodel.Validatable.VALID;
-
-public class ValidationViewModelTest {
+/**
+ * This tests methods of addValidator() taking consumer validators. Consumer type validators will allow developer to do validation to add multiple error, warn, and info messages.
+ * This cuts code down and allows an adhoc approach to validating fields and custom validation.
+ */
+public class ConsumerValidationViewModelTest {
     public static void main(String[] args){
         final String FIRST_NAME = "firstName";
         final String AGE = "age";
@@ -47,35 +49,36 @@ public class ValidationViewModelTest {
 
         ValidationViewModel personVm = new ValidationViewModel()
                 .addProperty(FIRST_NAME, "")
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
                     if (prop.isEmpty().get()) {
-                        return new ValidationMessage(FIRST_NAME, MessageType.ERROR, "${%s} is required".formatted(FIRST_NAME));
+                        vr.error("${%s} is required".formatted(FIRST_NAME));
                     }
-                    return VALID;
                 })
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
-                    if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
-                        return new ValidationMessage(FIRST_NAME, MessageType.ERROR, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
+                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
+                    String value = prop.get();
+                    if (value.length() < 3) {
+                        vr.error("${%s} must be greater than 2 characters.".formatted(FIRST_NAME));
+                        vr.warn("${%s} must be greater than 2 characters.".formatted(FIRST_NAME));
                     }
-                    return VALID;
+                    if (value.length() == 0) {
+                        vr.info("${%s} must not be blank.".formatted(FIRST_NAME));
+                    }
                 })
                 .addProperty(PHONE, "111-1111111")
-                .addValidator(PHONE, "Phone Number", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(PHONE, "Phone Number", (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
                     String ph = prop.get();
                     Pattern pattern = Pattern.compile("([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})");
                     Matcher matcher = pattern.matcher(ph);
                     if (!matcher.matches()) {
-                        return new ValidationMessage(PHONE, MessageType.ERROR, "${%s} must be formatted XXX-XXX-XXXX. Entered as %s".formatted(PHONE, ph));
+                        vr.error("${%s} must be formatted XXX-XXX-XXXX. Entered as %s".formatted(PHONE, ph));
                     }
-                    return VALID;
                 })
                 .addProperty("age", 54l)
                 .addProperty("height", 11)
-                .addValidator(HEIGHT, "Height", (ReadOnlyIntegerProperty prop, ViewModel vm) -> {
+                .addValidator(HEIGHT, "Height", (ReadOnlyIntegerProperty prop, ValidationResult vr, ViewModel vm) -> {
                     if (prop.get() < 1 || prop.get() > 10) {
-                        return new ValidationMessage(HEIGHT, MessageType.ERROR, "${%s} must be in range 1-10. Entered as %s ".formatted(HEIGHT, prop.get()));
+                        vr.error("${%s} must be in range 1-10. Entered as %s ".formatted(HEIGHT, prop.get()));
                     }
-                    return VALID;
                 })
                 .addProperty("colors", Set.of("red", "blue"))
                 .setPropertyValues("foods", List.of("bbq", "chips", "bbq"), true)
@@ -86,20 +89,54 @@ public class ValidationViewModelTest {
                     }
                 })
                 .addProperty(MPG, 20.5f)
-                .addValidator(MPG, "Miles Per Gallon", (ReadOnlyFloatProperty prop, ViewModel vm) -> {
+                .addValidator(MPG, "Miles Per Gallon", (ReadOnlyFloatProperty prop, ValidationResult vr, ViewModel vm) -> {
                     if (prop.get() < 1.0 || prop.get() > 20) {
-                        return new ValidationMessage(MPG, MessageType.ERROR, "${%s} must be in range 1.0 - 20.0. Entered as %s ".formatted(MPG, prop.get()));
+                        vr.error("${%s} must be in range 1.0 - 20.0. Entered as %s ".formatted(MPG, prop.get()));
                     }
-                    return VALID;
                 })
-                .addValidator(CUSTOM_PROP, "Custom Prop", (Void prop, ViewModel vm) -> {
+                .addValidator(CUSTOM_PROP, "Custom Prop", (ValidationResult vr, ViewModel vm) -> {
                     FloatProperty mpg = vm.getProperty(MPG);
 
                     if (mpg.get() < 1.0 || mpg.get() > 20) {
-                        return new ValidationMessage(MPG, MessageType.ERROR, "${%s} must be in range 1.0 - 20.0. Entered as %s ".formatted(CUSTOM_PROP, mpg.get()));
+                        vr.error("${%s} must be in range 1.0 - 20.0. Entered as %s ".formatted(CUSTOM_PROP, mpg.get()));
                     }
-                    return VALID;
                 });
+//        personVm.onChange(true, FIRST_NAME, PHONE);
+//        personVm.onChange(HEIGHT).dependsOn(FIRST_NAME, PHONE);
+//        personVm.onChange(a, b)
+//                .invoke(()-> {
+//
+//                });
+        // list of properties attach invalidation listener above for each.
+        /*
+        a + b = c
+        a -> firstname v1
+        b -> lastname
+        c -> validate
+
+        // evaluate c any time a or b has changed.
+        vm.validate(c).dependingOn(a, b);
+
+        // invoke code any time a or b has changed.
+        vm.invoke(()-> {}).dependingOn(a, b);
+        vm.onChange(a, b)
+          .invoke(()-> {});
+
+        // any changes evaluate all validators
+        vm.onChange(a, b).validateAll();
+
+        // unbind any and all dependencies & change listeners
+        vm.unbind();
+        vm.unbind(b);
+
+          .dependsOn(propA, propB)
+        vm.onChange(IS_CANCELLED_PROP)
+          .invoke( (oldVal, newVal)-> {
+             if (newVal && task != null && !task.isCancelled()) {
+                task.cancel();
+            }
+          });
+         */
 
         log("--------------");
         log("Creation personVm \n" + personVm);
@@ -110,7 +147,6 @@ public class ValidationViewModelTest {
         log(" Number of errors: " + personVm.getValidationMessages().size());
         log("--------------");
         displayErrorMsgs(personVm);
-        log("--------------");
         log("--------------");
 
         personVm.invalidate();

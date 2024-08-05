@@ -19,10 +19,7 @@ package org.carlfx.cognitive.validator;
 
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *  A validation manager is responsible for evaluating validators and producing validation messages.
@@ -37,6 +34,7 @@ import java.util.Map;
 public class ValidationManager {
     private final Map<String, String> friendlyNameMap = new LinkedHashMap<>();
     private Map<String, List<Validator<?, ViewModel>>> validatorsMap = new LinkedHashMap<>();
+    private Set<String> triggerValidatorSet = new HashSet<>();
 
     private List<ValidationMessage> validationMessages = new ArrayList<>();
 
@@ -82,6 +80,19 @@ public class ValidationManager {
         return validator;
     }
 
+    public void validateOnChange(boolean triggerValidator, String ...propertyNames) {
+        if (triggerValidator) {
+            if (propertyNames != null) {
+                triggerValidatorSet.addAll(Arrays.stream(propertyNames).toList());
+            }
+        } else {
+            triggerValidatorSet.removeAll(Arrays.stream(propertyNames).toList());
+        }
+    }
+    public boolean shouldValidateOnChange(String propertyName) {
+        return triggerValidatorSet.contains(propertyName);
+    }
+
     /**
      * Returns all validators based on property name
      * @param name property name
@@ -116,7 +127,7 @@ public class ValidationManager {
                 // 4. custom global name
                 ValidationMessage validationMessage = switch (validator) {
                     case BooleanValidator boolValidator -> boolValidator.apply(viewModel.getProperty(name), viewModel);
-                    case CustomValidator customValidator -> customValidator.apply(viewModel.getProperty(name), viewModel);
+                    case CustomValidator customValidator -> customValidator.apply(null, viewModel);
                     case DoubleValidator doubleValidator -> doubleValidator.apply(viewModel.getProperty(name), viewModel);
                     case FloatValidator floatValidator -> floatValidator.apply(viewModel.getProperty(name), viewModel);
                     case IntegerValidator intValidator -> intValidator.apply(viewModel.getProperty(name), viewModel);
@@ -127,6 +138,7 @@ public class ValidationManager {
                     case StringValidator stringValidator -> stringValidator.apply(viewModel.getProperty(name), viewModel);
                     default -> throw new IllegalStateException("Unexpected value: " + validator);
                 };
+
                 return validationMessage;
             }).filter( vMsg -> vMsg != null).toList());
         });

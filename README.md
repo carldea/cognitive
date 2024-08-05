@@ -1,5 +1,9 @@
 🚧 Work in progress 🚧
 Please view the Wiki [here](https://github.com/carldea/cognitive/wiki)
+# What's new
+- 1.2.0 08/05/2024 - Validators support multiple validation messages.
+- 1.1.0 06/28/2024 - PropertyIdentifier type objects to reference properties.
+- 1.0.0 05/30/2024 - Initial Release. FXMLMvvmLoader, SimpleViewModel, ValidationViewModel, Validators.
 
 # Cognitive
 A lightweight JavaFX (21) forms a framework based on the MVVM UI architecture pattern.
@@ -14,7 +18,7 @@ To see the demo's code see [Form demo](https://github.com/carldea/cognitive/tree
 
 *Gradle:*
 ```gradle
-implementation 'org.carlfx:cognitive:1.0.0'
+implementation 'org.carlfx:cognitive:1.2.0'
 ```
 
 *Maven:*
@@ -22,7 +26,7 @@ implementation 'org.carlfx:cognitive:1.0.0'
 <dependency>
     <groupId>org.carlfx</groupId>
     <artifactId>cognitive</artifactId>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -154,10 +158,10 @@ To bind properties do the following:
 final String FIRST_NAME = "firstName";
 
 // A text field
-TextField firstNameTextField = new TextField();
+var firstNameTextField = new TextField();
 
 // Create a 
-SimpleViewModel personVm = new SimpleViewModel()
+var personVm = new SimpleViewModel()
         .addProperty(FIRST_NAME, "");
 
 // Bidirectional bind of the first name property and text field's text property.
@@ -195,7 +199,7 @@ final String THING = "thing";
 final String MPG = "mpg";
 final String CUSTOM_PROP = "customProp";
 
-ValidationViewModel personVm = new ValidationViewModel()
+var personVm = new ValidationViewModel()
         .addProperty(FIRST_NAME, "")
         .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
             if (prop.isEmpty().get()) {
@@ -203,11 +207,15 @@ ValidationViewModel personVm = new ValidationViewModel()
             }
             return VALID;
         })
-        .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+        // Adding multiple validation messages
+        .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel viewModel) -> {
             if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
-                return new ValidationMessage(FIRST_NAME, MessageType.ERROR, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
+                validationResult.error(FIRST_NAME, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
             }
-            return VALID;
+            String firstChar = String.valueOf(prop.get().charAt(0));
+            if (firstChar.equals(firstChar.toLowerCase())) {
+                validationResult.error(FIRST_NAME, "${%s} first character must be upper case.".formatted(FIRST_NAME));
+            }
         })
         .addProperty(PHONE, "111-1111111")
         .addValidator(PHONE, "Phone Number", (ReadOnlyStringProperty prop, ViewModel vm) -> {
@@ -224,11 +232,10 @@ ValidationViewModel personVm = new ValidationViewModel()
 personVm.validate();
 
 if (personVm.hasErrors()) {
-        for (ValidationMessage vMsg : personVm.getValidationMessages()) {
-        vMsg.interpolate(personVm);
-        System.out.println("msg Type: %s errorcode: %s, msg: %s".formatted(vMsg.messageType(), vMsg.errorCode(), vMsg.interpolate(personVm)) );
-        }
-        }
+   for (ValidationMessage vMsg : personVm.getValidationMessages()) {
+      System.out.println("msg Type: %s errorcode: %s, msg: %s".formatted(vMsg.messageType(), vMsg.errorCode(), vMsg.interpolate(personVm)) );
+   }
+}
 
 ```
 Output:
@@ -243,11 +250,11 @@ Above you'll notice the first name field is required and must be more than 3 cha
 
 As each validation message contains a property of the field in question the code can create decorators or badges affixed on a UI control to allow the user to see the error or warning.
 ```java
- ValidationMessage vMsg = ...;
+ValidationMessage vMsg = ...;
 Label firstNameError = ...;
-        if (FIRST_NAME.equals(vMsg.propertyName())) {
-        firstNameError.setText(vMsg.message());
-        }
+if (FIRST_NAME.equals(vMsg.propertyName())) {
+   firstNameError.setText(vMsg.message());
+}
 
 ```
 Now let's fix the validation issues but instead of calling `validate()` you should call `save()`. A `ValidatationViewModel` overrides the `SimpleViewModel`'s `save()` method.
@@ -265,8 +272,8 @@ The correct thing to do is obtain the view model's model values by calling the f
 
 ```java
 if (personVm.hasErrorMsgs()) {
-        return;
-        }
+   return;
+}
 // Valid!
 // Obtain valid values from the view model.
 String validFirstName = personVm.getValue(FIRST_NAME); // You should not use personVm.getPropertyValue(FIRST_NAME);
@@ -314,7 +321,34 @@ When the submit is pressed show the overlay icons for each field with an error.
 
 <img width="595" alt="demo3" src="https://github.com/carldea/cognitive/assets/1594624/ced72d75-6681-4d42-a5c8-974ea70cab6f">
 
-A user with valid input.
+As you can see the user entered an initial character as an upper case 'F' only one error message alerts user that it must be 3 characters or more. With the new support of multiple error messages when using validator let show multiple messages related to the first name field.
+
+Here are the following requirements or validation rules for First Name:
+* Must not be blank
+* Must be greater than 3 characters
+* First character must be upper case
+
+Let's enter one lowercase character into the First Name field and click on submit to evaluate error messages.
+Shown below is the new support for multiple validation messages using ConsumerValidators.
+
+<img width="594" alt="Screenshot 2024-08-05 at 2 37 32 PM" src="https://github.com/user-attachments/assets/63478b27-2d7c-4017-862d-fea2bef45b32">
+
+Above you will notice the first name field the user entered one lowercase 'f' character getting 2 validation messages.
+To see how to add multiple validation messages shown below is a `StringConsumerValidator` for the first name field.
+
+```java
+viewModel.addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel viewModel) -> {
+    if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
+            validationResult.error(FIRST_NAME, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
+    }
+    String firstChar = String.valueOf(prop.get().charAt(0));
+    if (firstChar.equals(firstChar.toLowerCase())) {
+        validationResult.error(FIRST_NAME, "${%s} first character must be upper case.".formatted(FIRST_NAME));
+    }
+});
+```
+
+Now let's add correct data with valid input.
 
 <img width="488" alt="demo4" src="https://github.com/carldea/cognitive/assets/1594624/66c147a1-abc6-4ca7-b018-a4b6ba8b545c">
 

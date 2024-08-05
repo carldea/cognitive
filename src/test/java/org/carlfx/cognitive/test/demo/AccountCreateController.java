@@ -94,27 +94,21 @@ public class AccountCreateController {
         transactionMessageText.textProperty().bindBidirectional(accountViewModel.getProperty(TRANSACTION_TEXT));
     }
     private void clearForm() {
+        // TODO accountViewModel.reset()
+        accountViewModel.setPropertyValue(FIRST_NAME, "");
+        accountViewModel.setPropertyValue(LAST_NAME, "");
+        accountViewModel.setPropertyValue(EMAIL, "");
+        accountViewModel.setPropertyValue(TRANSACTION_TEXT, "");
+
+        // TODO refactor to use view model instead
         emailOverlay.setVisible(false);
-
-        emailTF.setText("");
-
         emailTooltip.setText("");
-
         firstNameErrorOverlay.setVisible(false);
-
-        firstNameTF.setText("");
-
         firstNameTooltip.setText("");
-
         lastNameErrorOverlay.setVisible(false);
-
-        lastNameTF.setText("");
-
         lastNameTooltip.setText("");
-
         submitButton.setDisable(true);
 
-        transactionMessageText.setText("");
 
     }
     private void resetErrorOverlays() {

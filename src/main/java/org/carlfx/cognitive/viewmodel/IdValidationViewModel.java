@@ -319,6 +319,15 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    public IdValidationViewModel addValidator(Object name, String friendlyName, ObjectConsumerValidator validator) {
+        ifPresentOrElse(name,
+                propertyIdentifier -> Validatable.super.addValidator(propertyIdentifier.idToString(), friendlyName, validator),
+                propName -> Validatable.super.addValidator(propName, friendlyName, validator)
+        );
+        return this;
+    }
+
+
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, IntegerValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
@@ -488,6 +497,56 @@ import java.util.stream.Collectors;
     }
 
     @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, BooleanConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, DoubleConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, FloatConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, IntegerConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, ListConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, LongConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, ObjectConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, SetConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, StringConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(String name, String friendlyName, ConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
     public IdValidationViewModel validate() {
         validationManager.validate(this);
         return this;
@@ -543,7 +602,10 @@ import java.util.stream.Collectors;
     public String getFriendlyName(Object propertName) {
         Optional<PropertyIdentifier> propertyIdentifier = findPropertyIdentifierByKey(propertName);
         if (propertyIdentifier.isPresent()) {
-            return Validatable.super.getFriendlyName(propertyIdentifier.get().idToString());
+            String found = Validatable.super.getFriendlyName(propertyIdentifier.get().idToString());
+            if (found != null) {
+                return found;
+            }
         }
         return Validatable.super.getFriendlyName(String.valueOf(propertName));
     }
