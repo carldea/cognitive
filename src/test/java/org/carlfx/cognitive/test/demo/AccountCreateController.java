@@ -69,7 +69,7 @@ public class AccountCreateController {
 
     @FXML
     public void initialize() {
-        clearForm();
+
         // check if populated.
         ChangeListener isNotPopulatedChecker = (obs, oldValue, newValue) -> {
             resetErrorOverlays();

@@ -17,9 +17,9 @@
  */
 package org.carlfx.cognitive.loader;
 
-import org.carlfx.cognitive.viewmodel.ViewModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import org.carlfx.cognitive.viewmodel.ViewModel;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -33,7 +33,6 @@ import java.util.function.Consumer;
  * Returns a JFXNode object containing the Node, Controller and set of NamedVm objects.
  * NamedVm objects represent a variable name and view model. This allows the caller to inject many view models into a
  * controller. Since they are created inside a controller the loader will return the known set of variables and their view models.
- *
  * The following are the various use cases.
  * <pre>
  *     1. Controller has a field annotated with @InjectViewModel instantiate the view model to be assigned.
@@ -176,9 +175,12 @@ public class FXMLMvvmLoader {
      * @param controller The JavaFX controller class possibly containing view models
      * @param namedViewModelMap A map consisting of variable name as the key and view model as the value.
      * @param updateConsumerMap An update consumer map, allowing caller to update view model properties prior to injection.
+     * @param <U> A typed ViewModel provided for the consumer (code block). This allows the user of the API to declare a
+     *           typed ViewModel to downcast if needed.
+     *
      * @return A list of NamedVm objects from inside the JavaFX controller class.
      */
-    protected static List<NamedVm> injectViewModels(Object controller, Map<String, NamedVm> namedViewModelMap, Map<String, List<Consumer<ViewModel>>> updateConsumerMap) {
+    protected static <U extends ViewModel> List<NamedVm> injectViewModels(Object controller, Map<String, NamedVm> namedViewModelMap, Map<String, List<Consumer<U>>> updateConsumerMap) {
         List<NamedVm> names = new ArrayList<>();
         for (Field field : controller.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(InjectViewModel.class)) {
@@ -200,11 +202,11 @@ public class FXMLMvvmLoader {
                             field.set(controller, viewModel);
                         }
                     } else {
-                        // The user has chosen to instanciate field.
+                        // The user has chosen to instantiate field.
                     }
                 } catch (IllegalAccessException | NoSuchMethodException | InstantiationException |
                          InvocationTargetException e) {
-                    throw new RuntimeException("%s class field %s".formatted(),e);
+                    throw new RuntimeException("%s class field %s".formatted(controller.getClass().getName(), field),e);
                 }
             }
         }
@@ -214,7 +216,7 @@ public class FXMLMvvmLoader {
                 updateConsumerMap
                         .get(namedVm.variableName()) /* get updaters */
                         .forEach(viewModelConsumer ->
-                                viewModelConsumer.accept(namedVm.viewModel())); /* view model set ViewModel properties */
+                                viewModelConsumer.accept((U) namedVm.viewModel())); /* view model set ViewModel properties */
             }
         }
         return names;

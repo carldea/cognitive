@@ -50,7 +50,7 @@ public record ValidationMessage(String propertyName, MessageType messageType, in
     }
 
     /**
-     * A form field type error message.
+     * A form field type validation message.
      * @param propertyName field property name
      * @param messageType info, error, warning message.
      * @param errorCode an error code. -1 if unknown
@@ -61,6 +61,17 @@ public record ValidationMessage(String propertyName, MessageType messageType, in
     }
 
     /**
+     * A form field type validation message.
+     * @param propertyName field property name as an Enum.
+     * @param messageType info, error, warning message.
+     * @param errorCode an error code. -1 if unknown
+     * @param message a message to let the user know what happened.
+     */
+    public ValidationMessage(Enum propertyName, MessageType messageType, int errorCode, String message) {
+        this(propertyName.toString(), messageType, errorCode, message, null);
+    }
+
+    /**
      * A form field type error message (no error code).
      * @param propertyName field property name
      * @param messageType info, error, warning message.
@@ -68,6 +79,16 @@ public record ValidationMessage(String propertyName, MessageType messageType, in
      */
     public ValidationMessage(String propertyName, MessageType messageType, String message) {
         this(propertyName, messageType, -1, message, null);
+    }
+
+    /**
+     * Constructor Validation message using an Enum as a property name, message type, and message.
+     * @param propertyName String property name to look up property.
+     * @param messageType Error, Information, or Warning
+     * @param message The message text.
+     */
+    public ValidationMessage(Enum propertyName, MessageType messageType, String message) {
+        this(propertyName.toString(), messageType, -1, message, null);
     }
 
     /**

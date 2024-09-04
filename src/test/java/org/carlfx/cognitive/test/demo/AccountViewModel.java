@@ -52,11 +52,11 @@ public class AccountViewModel extends ValidationViewModel {
                 })
                 .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel viewModel) -> {
                     if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
-                        validationResult.error(FIRST_NAME, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
+                        validationResult.error("${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
                     }
                     String firstChar = String.valueOf(prop.get().charAt(0));
                     if (firstChar.equals(firstChar.toLowerCase())) {
-                        validationResult.error(FIRST_NAME, "${%s} first character must be upper case.".formatted(FIRST_NAME));
+                        validationResult.error("${%s} first character must be upper case.".formatted(FIRST_NAME));
                     }
                 });
 

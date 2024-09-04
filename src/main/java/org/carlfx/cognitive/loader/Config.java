@@ -228,13 +228,25 @@ public class Config {
      * }
      * </pre>
      *
+     * Another example is specifying a derived view model to be updated.
+     * <pre>{@code
+     *     Config config = new Config();
+     *     config.updateViewModel("myViewModel", (MyViewModel viewModel) -> {
+     *         viewModel.setPropertyValue("XYZ", 12345)
+     *                  .setPropertyValue("ABC", "Hello");
+     *         viewModel.save(true);
+     *         viewModel.doSomethingFun();
+     *     });
+     * }
+     * </pre>
      * @param variableName A variable name as an instance variable (of type ViewModel) inside a controller class (annotated with InjectViewModel). These variables are injected or instantiated using FXMLMvvmLoader.
      * @param viewModelConsumer A consumer allows the caller to update property values on the view model.
+     * @param <U> A typed ViewModel provided for the consumer (code block). This allows the user of the API to declare a typed ViewModel to downcast if needed.
      * @return Returns itself to follow a builder pattern for easy Configuration creation.
      */
-    public Config updateViewModel(String variableName, Consumer<ViewModel> viewModelConsumer) {
+    public <U extends ViewModel> Config updateViewModel(String variableName, Consumer<U> viewModelConsumer) {
         // if variable found grab it and give it to caller.
-        getUpdaterConsumers(variableName).add(viewModelConsumer);
+        getUpdaterConsumers(variableName).add((Consumer<ViewModel>)viewModelConsumer);
         return this;
     }
 }

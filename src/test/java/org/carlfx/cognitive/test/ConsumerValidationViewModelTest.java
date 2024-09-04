@@ -31,14 +31,28 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.carlfx.cognitive.test.ConsumerValidationViewModelTest.PersonField.AGE;
+import static org.carlfx.cognitive.test.ConsumerValidationViewModelTest.PersonField.FIRST_NAME;
+
 /**
  * This tests methods of addValidator() taking consumer validators. Consumer type validators will allow developer to do validation to add multiple error, warn, and info messages.
  * This cuts code down and allows an adhoc approach to validating fields and custom validation.
  */
 public class ConsumerValidationViewModelTest {
+    protected enum PersonField {
+        FIRST_NAME("First Name"),
+        LAST_NAME("Last Name"),
+        AGE("Age");
+
+        private final String friendlyName;
+        PersonField(String friendlyName) {
+            this.friendlyName = friendlyName;
+        }
+        public String getFriendlyName() {
+            return this.friendlyName;
+        }
+    }
     public static void main(String[] args){
-        final String FIRST_NAME = "firstName";
-        final String AGE = "age";
         final String PHONE = "phone";
         final String HEIGHT = "height";
         final String COLORS = "colors";
@@ -49,12 +63,12 @@ public class ConsumerValidationViewModelTest {
 
         ValidationViewModel personVm = new ValidationViewModel()
                 .addProperty(FIRST_NAME, "")
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
+                .addValidator(FIRST_NAME, FIRST_NAME.friendlyName, (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
                     if (prop.isEmpty().get()) {
                         vr.error("${%s} is required".formatted(FIRST_NAME));
                     }
                 })
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
+                .addValidator(FIRST_NAME, FIRST_NAME.friendlyName, (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
                     String value = prop.get();
                     if (value.length() < 3) {
                         vr.error("${%s} must be greater than 2 characters.".formatted(FIRST_NAME));
@@ -73,7 +87,7 @@ public class ConsumerValidationViewModelTest {
                         vr.error("${%s} must be formatted XXX-XXX-XXXX. Entered as %s".formatted(PHONE, ph));
                     }
                 })
-                .addProperty("age", 54l)
+                .addProperty(AGE, 54l)
                 .addProperty("height", 11)
                 .addValidator(HEIGHT, "Height", (ReadOnlyIntegerProperty prop, ValidationResult vr, ViewModel vm) -> {
                     if (prop.get() < 1 || prop.get() > 10) {

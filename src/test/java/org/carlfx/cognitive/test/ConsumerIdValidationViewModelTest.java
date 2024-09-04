@@ -31,10 +31,17 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.carlfx.cognitive.test.ConsumerIdValidationViewModelTest.PersonForm.AGE;
+import static org.carlfx.cognitive.test.ConsumerIdValidationViewModelTest.PersonForm.FIRST_NAME;
+
 public class ConsumerIdValidationViewModelTest {
+    protected enum PersonForm {
+        FIRST_NAME,
+        LAST_NAME,
+        AGE,
+    }
     public static void main(String[] args){
-        final String FIRST_NAME = "firstName";
-        final String AGE = "age";
+
         final String PHONE = "phone";
         final String HEIGHT = "height";
         final String COLORS = "colors";
@@ -58,7 +65,7 @@ public class ConsumerIdValidationViewModelTest {
                         vr.error("${%s} is required".formatted(FIRST_NAME));
                     }
                 })
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
+                .addValidator("FIRST_NAME", "First Name", (ReadOnlyStringProperty prop, ValidationResult vr, ViewModel vm) -> {
                     if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
                         vr.error("${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
                     }
@@ -117,12 +124,12 @@ public class ConsumerIdValidationViewModelTest {
                 //.addProperty(new ConceptPropertyIdentifier(caseSigConceptRecord), (Object) null) // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
                 .addValidator(caseSigConceptRecord.uuid(), "Case significance", (ReadOnlyObjectProperty prop, ValidationResult vr, ViewModel vm) -> {
                     if (prop.isNull().get()) {
-                        vr.error(caseSigConceptRecord.uuid().toString(), "Case Significance must be populated. Set to null ");
+                        vr.error("Case Significance must be populated. Set to null ");
                     }
                     if (prop.isNotNull().get()) {
                         ConceptRecord conceptRecord = (ConceptRecord) prop.get();
                         if (!conceptRecord.uuid().equals(caseCapInitialConcept.uuid())) {
-                            vr.error(caseSigConceptRecord.uuid().toString(), "Case Significance must be %s. Entered as %s ".formatted(caseCapInitialConcept, prop.get()));
+                            vr.error("Case Significance must be %s. Entered as %s ".formatted(caseCapInitialConcept, prop.get()));
                         }
                     }
                 });

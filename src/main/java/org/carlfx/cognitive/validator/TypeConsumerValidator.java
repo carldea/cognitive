@@ -42,12 +42,18 @@ public interface TypeConsumerValidator<T, ValidationResult, ViewModel> {
 
     /**
      * Performs this operation on the given arguments.
-     * @param t
-     * @param validationResult
-     * @param viewModel
+     * @param property JavaFX ReadOnly Property based on a data type such as ReadOnlyBooleanProperty, ReadOnlyIntegerProperty
+     * @param validationResult holds error, info, warn messages when validation occurs.
+     * @param viewModel target view model to use in validation process.
      */
-    void accept(T t, ValidationResult validationResult, ViewModel viewModel);
+    void accept(T property, ValidationResult validationResult, ViewModel viewModel);
 
+    /**
+     * Returns a composed Consumer that performs, in sequence, this operation followed by the after operation.
+     * @param after the operation to perform after this operation
+     * @return a composed Consumer that performs in sequence this operation followed by the after operation
+     * @throws NullPointerException if after is null
+     */
     default TypeConsumerValidator<T, ValidationResult, ViewModel> andThen(TypeConsumerValidator<? super T, ValidationResult, ViewModel> after) {
         Objects.requireNonNull(after);
         return (l, r, x) -> {

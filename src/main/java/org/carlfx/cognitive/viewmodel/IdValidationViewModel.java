@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -228,7 +229,8 @@ import java.util.stream.Collectors;
      */
     @Override
     public IdValidationViewModel reset() {
-        return (IdValidationViewModel) super.reset();
+        super.reset();
+        return this;
     }
 
     /**
@@ -239,12 +241,14 @@ import java.util.stream.Collectors;
      */
     @Override
     public IdValidationViewModel setValue(String name, Object value) {
-        return (IdValidationViewModel) super.setValue(name, value);
+        super.setValue(name, value);
+        return this;
     }
 
     @Override
     public IdValidationViewModel setValue(Object name, Object value) {
-        return (IdValidationViewModel) super.setValue(name, value);
+        super.setValue(name, value);
+        return this;
     }
 
 
@@ -256,11 +260,13 @@ import java.util.stream.Collectors;
      */
     @Override
     public IdValidationViewModel setPropertyValue(String name, Object value) {
-        return (IdValidationViewModel) super.setPropertyValue(name, value);
+        super.setPropertyValue(name, value);
+        return this;
     }
     @Override
     public IdValidationViewModel setPropertyValue(Object name, Object value) {
-        return (IdValidationViewModel) super.setPropertyValue(name, value);
+        super.setPropertyValue(name, value);
+        return this;
     }
     /**
      * Sets the property value layer based on the property name.
@@ -319,6 +325,14 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on an object property.
+     * @return ViewModel itself.
+     *
+     */
     public IdValidationViewModel addValidator(Object name, String friendlyName, ObjectConsumerValidator validator) {
         ifPresentOrElse(name,
                 propertyIdentifier -> Validatable.super.addValidator(propertyIdentifier.idToString(), friendlyName, validator),
@@ -327,7 +341,14 @@ import java.util.stream.Collectors;
         return this;
     }
 
-
+    /**
+     * Allows derived classes to create global type validators.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype Integer
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, IntegerValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
@@ -349,6 +370,15 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Create a validator for a long value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype Long.
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, LongValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
@@ -370,6 +400,15 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Create a validator for a float value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype float.
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, FloatValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
@@ -391,13 +430,23 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Create a validator for a double value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype float.
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, DoubleValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
 
     /**
-     * Allows derived classes to create global type validators.
+     * Create a validator for a double value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
      * @param name Property name or property id used to add a validator.
      * @param friendlyName A string of the validation message
      * @param validator Validator based on the datatype Double.
@@ -412,6 +461,15 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Create a validator for an object value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype object (ObjectProperty).
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, ObjectValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
@@ -433,13 +491,23 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Create a validator for a list value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype list (ObservableList).
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, ListValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
 
     /**
-     * Allows derived classes to create global type validators.
+     * Create a validator for a list value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
      * @param name Property name
      * @param friendlyName A string of the validation message
      * @param validator Validator based on the datatype List
@@ -454,16 +522,26 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Create a validator for a set value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype List
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, SetValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
 
     /**
-     * Allows derived classes to create global type validators.
-     * @param name Property name or property id used to add a validator.
+     * Create a validator for a set value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name
      * @param friendlyName A string of the validation message
-     * @param validator Validator based on datatype of Set.
+     * @param validator Validator based on the datatype Set
      * @return ViewModel itself.
      *
      */
@@ -475,16 +553,26 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Create a custom validator. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on this view model.
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, CustomValidator validator) {
         return this.addValidator((Object) name, friendlyName, validator);
     }
 
     /**
-     * Allows derived classes to create global type validators.
-     * @param name Property name or property id used to add a validator.
+     * Create a custom validator. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name
      * @param friendlyName A string of the validation message
-     * @param validator a custom validator.
+     * @param validator Validator based on this view model.
      * @return ViewModel itself.
      *
      */
@@ -496,34 +584,215 @@ import java.util.stream.Collectors;
         return this;
     }
 
+    /**
+     * Create a validator for a boolean value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype boolean (BooleanProperty).
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, BooleanConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
     }
 
+    /**
+     * Create a validator for a double value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype boolean (DoubleProperty).
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, DoubleConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
     }
 
+    /**
+     * Create a validator for a float value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype float (FloatProperty).
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, FloatConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
     }
 
+    /**
+     * Create a validator for an integer value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype integer (IntegerProperty).
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, IntegerConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
     }
 
+    /**
+     * Create a validator for a List value based on a named property. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype list (ObservableList).
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, ListConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
     }
 
+    /**
+     * Create multiple validation messages using Consumer validators.
+     * Validation for read-only JavaFX LongProperty. When creating error messages the friendly name
+     * is used instead of the property name.
+     * @param name Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator Validator based on the datatype list (Long).
+     * @return ViewModel itself.
+     *
+     */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, LongConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, Property property) {
+        super.addProperty(name, property);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel setValue(Enum name, Object value) {
+        super.setValue(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel setPropertyValue(Enum name, Object value, boolean skip) {
+        super.setPropertyValue(name, value, skip);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel setPropertyValues(Enum name, Collection values, boolean skip) {
+        super.setPropertyValues(name, values, skip);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel setPropertyValue(Enum name, Object value) {
+        super.setPropertyValue(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel setPropertyValues(Enum name, Collection values) {
+        super.setPropertyValues(name, values);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, String value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, int value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, long value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, float value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, double value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, boolean value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, Collection value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, Collection value, boolean skip) {
+        super.addProperty(name, value, skip);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(Enum name, Object value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel setPropertyValue(Object propId, Object value, boolean skip) {
+        super.setPropertyValue(propId, value, skip);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel setPropertyValues(Object propId, Collection values, boolean skip) {
+        super.setPropertyValues(propId, values, skip);
+        return this;
+    }
+
+    @Override
+    protected IdValidationViewModel ifPresentOrElse(Object propId, Consumer<PropertyIdentifier> propIdPresent, Consumer<String> propName) {
+        super.ifPresentOrElse(propId, propIdPresent, propName);
+        return this;
+    }
+
+    @Override
+    protected IdValidationViewModel ifNotPresentAddPropertyId(PropertyIdentifier propId, Consumer<String> consumer) {
+        super.ifNotPresentAddPropertyId(propId, consumer);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(String name, Collection value, boolean skip) {
+        super.addProperty(name, value, skip);
+        return this;
+    }
+
+    @Override
+    public IdValidationViewModel addProperty(PropertyIdentifier propId, Collection value, boolean skip) {
+        super.addProperty(propId, value, skip);
+        return this;
     }
 
     @Override
@@ -543,6 +812,101 @@ import java.util.stream.Collectors;
 
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, ConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, StringValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, BooleanValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, IntegerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, LongValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, FloatValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, DoubleValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, ObjectValidator validator) {
+        return null;
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, ListValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, CustomValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, BooleanConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, DoubleConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, FloatConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, IntegerConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, ListConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, LongConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, ObjectConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, SetConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, StringConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public IdValidationViewModel addValidator(Enum name, String friendlyName, ConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
     }
 
@@ -569,7 +933,7 @@ import java.util.stream.Collectors;
      */
     public IdValidationViewModel save(boolean force) {
         if (force) {
-            return (IdValidationViewModel) super.save();
+            super.save();
         }
         return this.save();
     }
@@ -586,7 +950,8 @@ import java.util.stream.Collectors;
             return this;
         }
 
-        return (IdValidationViewModel) super.save();
+        super.save();
+        return this;
     }
 
     @Override
@@ -629,4 +994,6 @@ import java.util.stream.Collectors;
                 ", validationMessages=[" + messages.stream().collect(Collectors.joining(",")) + "]" +
                 '}';
     }
+
+
 }
