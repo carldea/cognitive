@@ -21,15 +21,26 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.carlfx.cognitive.loader.Config;
 import org.carlfx.cognitive.loader.FXMLMvvmLoader;
 import org.carlfx.cognitive.loader.JFXNode;
+import org.carlfx.cognitive.viewmodel.ValidationViewModel;
+
+import static org.carlfx.cognitive.test.demo.AccountViewModel.EMAIL;
 
 public class DemoApp extends Application {
 
     @Override
     public void start(Stage stage) {
         stage.setTitle("Demo AccountViewModel");
-        JFXNode<Pane, AccountCreateController> jfxNode = FXMLMvvmLoader.make(this.getClass().getResource("account-create.fxml"));
+        Config config = new Config(this.getClass().getResource("account-create.fxml"))
+                .updateViewModel("accountViewModel", (ValidationViewModel acctViewModel) -> {
+                    acctViewModel
+                            .setPropertyValue(EMAIL, "test")
+                            .save(true);
+                    System.out.println("Debug: " + acctViewModel);
+                });
+        JFXNode<Pane, Void> jfxNode = FXMLMvvmLoader.make(config);
         Scene scene = new Scene(jfxNode.node());
         stage.setScene(scene);
         stage.show();

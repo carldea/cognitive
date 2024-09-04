@@ -80,6 +80,102 @@ public class IdSimpleViewModel extends SimpleViewModel {
     }
 
     @Override
+    public IdSimpleViewModel addProperty(Enum name, Property property) {
+        return (IdSimpleViewModel) super.addProperty(name, property);
+    }
+
+    @Override
+    public IdSimpleViewModel setValue(Enum name, Object value) {
+        super.setValue(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel setPropertyValue(Enum name, Object value, boolean skip) {
+        super.setPropertyValue(name, value, skip);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel setPropertyValues(Enum name, Collection values, boolean skip) {
+        super.setPropertyValues(name, values, skip);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel setPropertyValue(Enum name, Object value) {
+        super.setPropertyValue(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel setPropertyValues(Enum name, Collection values) {
+        super.setPropertyValues(name, values);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, String value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, int value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, long value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, float value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, double value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, boolean value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, Collection value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, Collection value, boolean skip) {
+        super.addProperty(name, value, skip);
+        return this;
+    }
+
+    @Override
+    public IdSimpleViewModel addProperty(Enum name, Object value) {
+        super.addProperty(name.toString(), value);
+        return this;
+    }
+
+    @Override
+    public <T extends ViewModel> IdSimpleViewModel addProperty(String name, Function<T, Collection> value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+
+    @Override
     public IdSimpleViewModel setValue(String name, Object value) {
         this.setValue((Object) name, value);
         return this;
@@ -240,7 +336,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
 
     @Override
     public IdSimpleViewModel addProperty(String name, Property property) {
-        return super.addProperty(name, property);
+        super.addProperty(name, property);
+        return this;
     }
 
     /**
@@ -254,7 +351,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
     }
     @Override
     public IdSimpleViewModel addProperty(String name, String value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
 
     /**
@@ -269,7 +367,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
 
     @Override
     public IdSimpleViewModel addProperty(String name, int value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
 
     /**
@@ -284,7 +383,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
 
     @Override
     public IdSimpleViewModel addProperty(String name, long value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
 
     /**
@@ -299,7 +399,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
 
     @Override
     public IdSimpleViewModel addProperty(String name, float value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
 
     /**
@@ -314,7 +415,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
 
     @Override
     public IdSimpleViewModel addProperty(String name, double value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
 
     /**
@@ -329,7 +431,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
 
     @Override
     public IdSimpleViewModel addProperty(String name, boolean value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
 
     /**
@@ -344,7 +447,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
 
     @Override
     public IdSimpleViewModel addProperty(String name, Collection value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
 
     /**
@@ -352,14 +456,16 @@ public class IdSimpleViewModel extends SimpleViewModel {
      * @param propId PropertyIdentifier.
      * @param value The raw value type referencing a property name. This will create a JavaFX property to hold the raw value.
      * @return Returns a SimpleViewModel itself following the builder pattern.
-     */    public IdSimpleViewModel addProperty(PropertyIdentifier propId, Collection value) {
+     */
+    public IdSimpleViewModel addProperty(PropertyIdentifier propId, Collection value) {
         return ifNotPresentAddPropertyId(propId, (propName) -> super.addProperty(propName, value));
     }
 
     @Override
     public IdSimpleViewModel addProperty(String name, Collection value, boolean skip) {
-        return super.addProperty(name, value, skip);
-    }
+        super.addProperty(name, value, skip);
+        return this;
+     }
 
     /**
      * Add a new property as a Collection value with a way to skip any copying to model values layer.
@@ -373,7 +479,8 @@ public class IdSimpleViewModel extends SimpleViewModel {
     }
     @Override
     public IdSimpleViewModel addProperty(String name, Object value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
 
     /**
@@ -593,14 +700,14 @@ public class IdSimpleViewModel extends SimpleViewModel {
      */
     public String debugPropertyMessage(Object propertyIdentifier) {
         return returnIfPresentOrElse(propertyIdentifier,
-                propId   -> "viewProperty:%s = %s | modelValue:%s = %s".formatted(propertyIdentifier, getProperty(propertyIdentifier).getValue(), propertyIdentifier.toString(), getValue(propertyIdentifier)),
+                propId   -> "propertyValue:%s = %s | modelValue:%s = %s".formatted(propertyIdentifier, getProperty(propertyIdentifier).getValue(), propertyIdentifier.toString(), getValue(propertyIdentifier)),
                 propName -> {
-                    if (getSingleValueMap().containsKey(propName)){
-                        return "viewProperty:%s = %s | modelValue:%s = %s".formatted(propName, this.getProperty(propName).getValue(), propName, this.getValue(propName));
-                    } else if (getMultiValueMap().containsKey(propName)) {
-                        return "viewProperty:%s = %s | modelValue:%s = %s".formatted(propName, this.getObservableCollection(propName), propName, this.getCollection(propName));
+                    if (getSinglePropertyValueMap().containsKey(propName)){
+                        return "propertyValue:%s = %s | modelValue:%s = %s".formatted(propName, this.getProperty(propName).getValue(), propName, this.getValue(propName));
+                    } else if (getMultiValueObservablesMap().containsKey(propName)) {
+                        return "propertyValue:%s = %s | modelValue:%s = %s".formatted(propName, this.getObservableCollection(propName), propName, this.getCollection(propName));
                     } else {
-                        return "Unknown viewProperty:%s".formatted(propName);
+                        return "Unknown propertyValue:%s".formatted(propName);
                     }
                 }
         );
@@ -609,12 +716,12 @@ public class IdSimpleViewModel extends SimpleViewModel {
     @Override
     public String toString() {
         return "IdSimpleViewModel {\n" +
-                getSingleValueMap()
+                getSinglePropertyValueMap()
                         .keySet()
                         .stream()
                         .map(name -> " " + debugPropertyMessage(name) + "\n")
                         .collect(Collectors.joining()) +
-                getMultiValueMap()
+                getMultiValueObservablesMap()
                         .keySet()
                         .stream()
                         .map(name -> " " + debugPropertyMessage(name) + "\n")

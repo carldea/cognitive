@@ -31,13 +31,27 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.carlfx.cognitive.test.IdValidationViewModelTest.PersonField.AGE;
+import static org.carlfx.cognitive.test.IdValidationViewModelTest.PersonField.FIRST_NAME;
 import static org.carlfx.cognitive.validator.MessageType.ERROR;
 import static org.carlfx.cognitive.viewmodel.ValidationViewModel.VALID;
 
 public class IdValidationViewModelTest {
+    protected enum PersonField {
+        FIRST_NAME("First Name"),
+        LAST_NAME("Last Name"),
+        AGE("Age");
+
+        private final String friendlyName;
+        PersonField(String friendlyName) {
+            this.friendlyName = friendlyName;
+        }
+        public String getFriendlyName() {
+            return this.friendlyName;
+        }
+    }
+
     public static void main(String[] args){
-        final String FIRST_NAME = "firstName";
-        final String AGE = "age";
         final String PHONE = "phone";
         final String HEIGHT = "height";
         final String COLORS = "colors";
@@ -57,13 +71,13 @@ public class IdValidationViewModelTest {
 
         IdValidationViewModel personVm =  new IdValidationViewModel()
                 .addProperty(FIRST_NAME, "")
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(FIRST_NAME, FIRST_NAME.friendlyName, (ReadOnlyStringProperty prop, ViewModel vm) -> {
                     if (prop.isEmpty().get()) {
                         return new ValidationMessage(FIRST_NAME, ERROR, "${%s} is required".formatted(FIRST_NAME));
                     }
                     return VALID;
                 })
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(FIRST_NAME, FIRST_NAME.friendlyName, (ReadOnlyStringProperty prop, ViewModel vm) -> {
                     if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
                         return new ValidationMessage(FIRST_NAME, ERROR, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
                     }
@@ -79,7 +93,7 @@ public class IdValidationViewModelTest {
                     }
                     return VALID;
                 })
-                .addProperty("age", 54l)
+                .addProperty(AGE, 54l)
                 .addProperty("height", 11)
                 .addValidator(HEIGHT, "Height", (ReadOnlyIntegerProperty prop, ViewModel vm) -> {
                     if (prop.get() < 1 || prop.get() > 10) {

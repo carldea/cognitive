@@ -19,14 +19,12 @@
 package org.carlfx.cognitive.viewmodel;
 
 import javafx.beans.Observable;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * As part of the MVVM pattern this view model interface provide common functions to store model values and create
@@ -87,6 +85,165 @@ public interface ViewModel {
     <T> T save();
 
     /**
+     * Return Model values.
+     * @param name An Enum representing the property name instead of a String.
+     * @return Return model value.
+     * @param <T> The type of the stored value.
+     */
+    <T> T getValue(Enum name);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as a String.
+     * @param property A JavaFX property.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(String name, Property property);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param property A JavaFX property.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, Property property);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A String value. A JavaFX StringProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, String value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as a String.
+     * @param value A String value. A JavaFX StringProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(String name, String value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value An int value. A JavaFX IntegerProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, int value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A long value. A JavaFX LongProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, long value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A float value. A JavaFX FloatProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, float value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A double value. A JavaFX DoubleProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, double value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A boolean value. A JavaFX BooleanProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, boolean value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A Collection value. A JavaFX ObservableCollection will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, Collection value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A Collection value. A JavaFX ObservableCollection will get created.
+     * @param skip skip being true means during a save() operation to not copy (skip) property values from the property value layer into the model value layer. This is typically for scenarios to populate a UIs dropdown options.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, Collection value, boolean skip);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as a String.
+     * @param value A Collection value. A JavaFX ObservableCollection will get created.
+     * @param skip skip being true means during a save() operation to not copy (skip) property values
+     *             from the property value layer into the model value layer. This is typically for scenarios
+     *             to populate a UIs dropdown options.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(String name, Collection value, boolean skip);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as a String.
+     * @param value An Object value. A JavaFX ObjectProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(String name, Object value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value An Object value. A JavaFX ObjectProperty will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, Object value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A Function that returns a Collection value. A JavaFX ObservableCollection will get created.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, Function<T, Collection> value);
+
+    /**
+     * Add (create) a new property referenced by name.
+     * @param name The property's name as an Enum.
+     * @param value A Function that returns a Collection value. A JavaFX ObservableCollection will get created.
+     * @param skip skip being true means during a save() operation to not copy (skip) property values from the
+     *             property value layer into the model value layer. This is typically for scenarios to populate
+     *             a UIs dropdown options.
+     * @return Returns a ViewModel following the builder pattern.
+     * @param <T> Type T is any derived ViewModel object.
+     */
+    <T extends ViewModel> T addProperty(Enum name, Function<T, Collection> value, boolean skip);
+
+    /**
      * Returns a JavaFX Property to be used in a UI form.
      * <pre>{@code
      *    StringProperty myName = viewModel.getProperty("firstName");
@@ -99,6 +256,20 @@ public interface ViewModel {
      * @param <T> T is the Property such as IntegerProperty or StringProperty.
      */
     <T extends Property> T getProperty(String name);
+
+    /**
+     * Returns a JavaFX Property to be used in a UI form.
+     * <pre>{@code
+     *    StringProperty myName = viewModel.getProperty("firstName");
+     *    System.out.println("My name is %s".formatted(myName.get()); // My name is Fred
+     * }
+     * </pre>
+     *
+     * @param name The property name as an enum value. e.g. PersonEnum { firstName, lastName }.
+     * @return Returns a Property. The property contains the actual value.
+     * @param <T> T is the Property such as IntegerProperty or StringProperty.
+     */
+    <T extends Property> T getProperty(Enum name);
 
     /**
      * Returns a value to be used in a UI form.
@@ -114,6 +285,21 @@ public interface ViewModel {
      */
     default <T> T getPropertyValue(String name) {
         return (T) getProperty(name).getValue();
+    }
+    /**
+     * Returns a value to be used in a UI form.
+     * <pre>{@code
+     *    String myName = viewModel.getPropertyValue("firstName");
+     *    System.out.println("My name is %s".formatted(myName); // My name is Fred
+     * }
+     * </pre>
+     *
+     * @param name The property name as an enum value. e.g. PersonForm { firstName, lastName}.
+     * @return Returns a Property's value.
+     * @param <T> T is the Property such as IntegerProperty or StringProperty.
+     */
+    default <T> T getPropertyValue(Enum name) {
+        return getPropertyValue(name.toString());
     }
 
     /**
@@ -142,6 +328,43 @@ public interface ViewModel {
     }
 
     /**
+     * Returns a ObservableCollection to be used in a UI form.
+     * <pre>{@code
+     *    ObservableCollection<String> phones = viewModel.getPropertyValues("phones");
+     *    phones.forEach(System.out::println);
+     *    phones.addListener( new ListChangeListener() {
+     *         @Override
+     *         public void onChanged(ListChangeListener.Change change) {
+     *              if (change.wasAdded()) {
+     *                  System.out.println("a phone added);
+     *              }
+     *         }
+     *    }
+     *    phones.add("123-222-5555");
+     * }
+     * </pre>
+     *
+     * @param name The property name as an enum. e.g. firstName, lastName.
+     * @return Returns a Property's value.
+     * @param <T> T is the Property such as IntegerProperty or StringProperty .
+     */
+    default <T> T getPropertyValues(Enum name) {
+        return getPropertyValues(name.toString());
+    }
+
+    /**
+     * Sets the Property to contain the new value. It does not set the model value.
+     * @param name Enum used instead of a String property name.
+     * @param values a collection values to be set.
+     * @param skip skip being true means during a save() operation to not copy (skip) property values from the
+     *             property value layer into the model value layer. This is typically for scenarios to populate
+     *             a UIs dropdown options.
+     * @return returns itself of type ViewModel.
+     * @param <T> T is an instance of a ViewModel.
+     */
+    <T extends ViewModel> T setPropertyValues(Enum name, Collection values, boolean skip);
+
+    /**
      * Sets the Property to contain the new value. It does not set the model value.
      * @param name property name
      * @param value raw value
@@ -149,6 +372,15 @@ public interface ViewModel {
      * @param <T> T is an instance of a ViewModel.
      */
     <T extends ViewModel> T setPropertyValue(String name, Object value);
+
+    /**
+     * Sets the Property to contain the new value. It does not set the model value.
+     * @param name property name as an Enum value.
+     * @param value raw value
+     * @return returns itself of type ViewModel.
+     * @param <T> T is an instance of a ViewModel.
+     */
+    <T extends ViewModel> T setPropertyValue(Enum name, Object value);
 
     /**
      * Sets the observable collection's with values.
@@ -160,6 +392,24 @@ public interface ViewModel {
     <T extends ViewModel> T setPropertyValues(String name, Collection values);
 
     /**
+     * Sets the observable collection's with values.
+     * @param name The name of the property as an enum value.
+     * @param values The list of values to be put into an observable collection.
+     * @return Returns the view model itself following the builder pattern.
+     * @param <T> T is an instance of a ViewModel.
+     */
+    <T extends ViewModel> T setPropertyValues(Enum name, Collection values);
+
+    /**
+     * Sets the model layer's value based on the property name. Please see the save() method.
+     * @param name The property name as an Enum
+     * @param value The value to be set.
+     * @return Returns this variable following the builder pattern.
+     * @param <T> Type T is a derived class of a ViewModel.
+     */
+    <T extends ViewModel> T setValue(Enum name, Object value);
+
+    /**
      * Sets the Property to contain the new value. It does not set the model value.
      * @param name property name
      * @param value raw value
@@ -168,6 +418,16 @@ public interface ViewModel {
      * @param <T> T is an instance of a ViewModel.
      */
     <T extends ViewModel> T setPropertyValue(String name, Object value, boolean skip);
+
+    /**
+     * Sets the Property to contain the new value. It does not set the model value.
+     * @param name Enum to be used to reference a property lookup
+     * @param value raw value
+     * @param skip True to skip the process of copying the property value into the model value.
+     * @return returns itself of type ViewModel following the builder pattern.
+     * @param <T> T is an instance of a ViewModel.
+     */
+    <T extends ViewModel> T setPropertyValue(Enum name, Object value, boolean skip);
 
     /**
      * Sets the observable collection's with values.
@@ -185,6 +445,14 @@ public interface ViewModel {
      * @return The property associated with the name. Here you can unbind things or clean up.
      */
     Property removeProperty(String name);
+
+    /**
+     * Removes a property and model values from the view model.
+     * @param name property name as an Enum
+     * @return The property associated with the name. Here you can unbind things or clean up.
+     */
+    Property removeProperty(Enum name);
+
     /**
      * Sets the model data (valueMap values). TODO: check type before putting it into valueMap. e.g. if StringProperty value should not allow an Integer.
      * @param name property name
@@ -210,12 +478,28 @@ public interface ViewModel {
     <T> ObservableList<T> getObservableList(String name);
 
     /**
+     * Returns an ObservableList based on property name.
+     * @param name property name as an Enum.
+     * @return an observable list. Used for the UI or testing.
+     * @param <T> T is type of object in an ObservableList.
+     */
+    <T> ObservableList<T> getObservableList(Enum name);
+
+    /**
      * Returns an ObservableSet based on property name.
      * @param name property name.
      * @return an observable set. Used for the UI.
      * @param <T> T is type of object in an ObservableSet.
      */
     <T> ObservableSet<T> getObservableSet(String name);
+
+    /**
+     * Returns an ObservableSet based on property name (as an Enum). The set is from the property value layer.
+     * @param name property name (as an Enum).
+     * @return an observable set. Used for the UI.
+     * @param <T> T is type of object in an ObservableSet.
+     */
+    <T> ObservableSet<T> getObservableSet(Enum name);
 
     /**
      * Removes the ObservableCollection from the view model.
@@ -233,12 +517,27 @@ public interface ViewModel {
     <T> T getValue(String name);
 
     /**
+     * Removes a property and values based on the property name.
+     * @param name property name as an Enum.
+     * @return Returns Observable after it is removed.
+     */
+    Observable removeObservableCollection(Enum name);
+
+    /**
      * Returns the model value as a List. e.g. using a SimpleViewModel save() method the property value is copied into the model value.
      * @param name Property name
      * @return Returns the raw value (List) from the model values (multi value map).
      * @param <T> T is the values return type. A class cast exception can occur.
      */
     <T> List<T> getList(String name);
+
+    /**
+     * Returns a List from the model value layer. See save() method for more details.
+     * @param name The name of the property to lookup.
+     * @return Returns a List from the model value layer. See save() method for more details.
+     * @param <T> Type T is the type inside the collection.
+     */
+    <T> List<T> getList(Enum name);
 
     /**
      * Returns the model value as a Set. e.g. using a SimpleViewModel save() method the property value is copied into the model value.
@@ -249,12 +548,28 @@ public interface ViewModel {
     <T> Set<T> getSet(String name);
 
     /**
+     * Returns a Set from the model value layer. See save() method for more details.
+     * @param name The name of the property to lookup.
+     * @return Returns a List from the model value layer. See save() method for more details.
+     * @param <T> Type T is the type inside the collection.
+     */
+    <T> Set<T> getSet(Enum name);
+
+    /**
      * Returns the model value as a Collection. e.g. using a SimpleViewModel save() method the property value is copied into the model value.
      * @param name Property name
      * @return Returns the raw value (Collection) from the model values (multi value map).
      * @param <T> T is the values return type. A class cast exception can occur.
      */
     <T> Collection<T> getCollection(String name);
+
+    /**
+     * Returns a Set from the model value layer. See save() method for more details.
+     * @param name The name of the property to lookup.
+     * @return Returns a List from the model value layer. See save() method for more details.
+     * @param <T> Type T is the type inside the collection.
+     */
+    <T> Collection<T> getCollection(Enum name);
 
     /**
      * TODO output to console or logger
@@ -266,16 +581,30 @@ public interface ViewModel {
     }
 
     /**
+     * TODO output to console or logger
+     * Debug and output property values.
+     * @param name the property value
+     */
+    void debugProperty(Enum name);
+
+    /**
      * Returns a debug string of property values and model values.
      * @param name property name to debug
      * @return Returns a debug string of property values and model values.
      */
     default String debugPropertyMessage(String name) {
         if (getProperty(name) != null) {
-            return "viewProperty:%s = %s | modelValue:%s = %s".formatted(name, getProperty(name).getValue(), name, getValue(name));
+            return "propertyValue:%s = %s | modelValue:%s = %s".formatted(name, getProperty(name).getValue(), name, getValue(name));
         } else if(getObservableCollection(name) != null) {
-            return "viewProperty:%s = %s | modelValue:%s = %s".formatted(name, getObservableCollection(name), name, getCollection(name));
+            return "propertyValue:%s = %s | modelValue:%s = %s".formatted(name, getObservableCollection(name), name, getCollection(name));
         }
-        return "Unknown viewProperty:%s    ".formatted(name);
+        return "Unknown property:%s    ".formatted(name);
     }
+
+    /**
+     * Returns a debug string of property values and model values.
+     * @param name property name to debug
+     * @return Returns a debug string of property values and model values.
+     */
+    String debugPropertyMessage(Enum name);
 }

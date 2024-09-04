@@ -21,8 +21,12 @@ module org.carlfx.cognitive.test {
     requires javafx.fxml;
     requires javafx.graphics;
     requires javafx.controls;
-
+    requires org.slf4j;
     requires org.carlfx.cognitive;
+    requires org.junit.jupiter.engine;
+    requires org.junit.jupiter.params;
+    requires org.junit.jupiter.api;
+    opens org.carlfx.cognitive.test to org.junit.platform.commons;
     opens org.carlfx.cognitive.test.demo to javafx.fxml, org.carlfx.cognitive;
     exports org.carlfx.cognitive.test;
     exports org.carlfx.cognitive.test.demo;

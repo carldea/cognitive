@@ -17,10 +17,7 @@
  */
 package org.carlfx.cognitive.test;
 
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.ReadOnlyFloatProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.*;
 import org.carlfx.cognitive.validator.MessageType;
 import org.carlfx.cognitive.validator.ValidationMessage;
 import org.carlfx.cognitive.viewmodel.ValidationViewModel;
@@ -31,12 +28,17 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.carlfx.cognitive.test.ValidationViewModelTest.PersonForm.AGE;
+import static org.carlfx.cognitive.test.ValidationViewModelTest.PersonForm.FIRST_NAME;
 import static org.carlfx.cognitive.viewmodel.Validatable.VALID;
 
 public class ValidationViewModelTest {
+    protected enum PersonForm {
+        FIRST_NAME,
+        LAST_NAME,
+        AGE,
+    }
     public static void main(String[] args){
-        final String FIRST_NAME = "firstName";
-        final String AGE = "age";
         final String PHONE = "phone";
         final String HEIGHT = "height";
         final String COLORS = "colors";

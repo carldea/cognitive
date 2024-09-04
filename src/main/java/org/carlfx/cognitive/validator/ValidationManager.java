@@ -80,19 +80,6 @@ public class ValidationManager {
         return validator;
     }
 
-    public void validateOnChange(boolean triggerValidator, String ...propertyNames) {
-        if (triggerValidator) {
-            if (propertyNames != null) {
-                triggerValidatorSet.addAll(Arrays.stream(propertyNames).toList());
-            }
-        } else {
-            triggerValidatorSet.removeAll(Arrays.stream(propertyNames).toList());
-        }
-    }
-    public boolean shouldValidateOnChange(String propertyName) {
-        return triggerValidatorSet.contains(propertyName);
-    }
-
     /**
      * Returns all validators based on property name
      * @param name property name

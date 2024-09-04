@@ -38,15 +38,14 @@ public class ValidationResult {
     }
 
     /**
-     * Adds an error validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     * @param errorCode -1 for unknown otherwise a specific error number.
-     * @param throwable A thrown exception.
+     * Constructor taking an Enum as the property name. The property name lookup will use the Enum.name() method.
+     * @param propertyName property name as an Enum.
+     * @param <T> T is a derived Enum type.
      */
-    public void error(String propertyName, String message, int errorCode, Throwable throwable) {
-        messages.add(new ValidationMessage(propertyName, MessageType.ERROR, errorCode, message, throwable));
+    public <T extends Enum> ValidationResult(T propertyName) {
+        this.propertyName = propertyName.name();
     }
+
     /**
      * Adds an error validation message.
      * @param message Message when validation evaluates to invalid.
@@ -54,68 +53,36 @@ public class ValidationResult {
      * @param throwable A thrown exception.
      */
     public void error(String message, int errorCode, Throwable throwable) {
-        this.error(propertyName, message, errorCode, throwable);
+        messages.add(new ValidationMessage(propertyName, MessageType.ERROR, errorCode, message, throwable));
     }
-    /**
-     * Adds an error validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     * @param throwable A thrown exception.
-     */
-    public void error(String propertyName, String message, Throwable throwable) {
-        messages.add(new ValidationMessage(propertyName, MessageType.ERROR, -1, message, throwable));
-    }
+
+
     /**
      * Adds an error validation message.
      * @param message Message when validation evaluates to invalid.
      * @param throwable A thrown exception.
      */
     public void error(String message, Throwable throwable) {
-        this.error(propertyName, message, throwable);
+        messages.add(new ValidationMessage(propertyName, MessageType.ERROR, -1, message, throwable));
     }
-    /**
-     * Adds an error validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     * @param errorCode -1 for unknown otherwise a specific error number.
-     */
-    public void error(String propertyName, String message, int errorCode) {
-        messages.add(new ValidationMessage(propertyName, MessageType.ERROR, errorCode, message));
-    }
+
     /**
      * Adds an error validation message.
      * @param message Message when validation evaluates to invalid.
      * @param errorCode -1 for unknown otherwise a specific error number.
      */
     public void error(String message, int errorCode) {
-        this.error(propertyName, message, errorCode);
+        messages.add(new ValidationMessage(propertyName, MessageType.ERROR, errorCode, message));
     }
-    /**
-     * Adds an error validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     */
-    public void error(String propertyName, String message) {
-        messages.add(new ValidationMessage(propertyName, MessageType.ERROR, message));
-    }
+
     /**
      * Adds an error validation message.
      * @param message Message when validation evaluates to invalid.
      */
     public void error(String message) {
-        this.error(propertyName, message);
+        messages.add(new ValidationMessage(propertyName, MessageType.ERROR, message));
     }
 
-    /**
-     * Adds a warning validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     * @param errorCode -1 for unknown otherwise a specific error number.
-     * @param throwable A thrown exception.
-     */
-    public void warn(String propertyName, String message, int errorCode, Throwable throwable) {
-        messages.add(new ValidationMessage(propertyName, MessageType.WARN, errorCode, message, throwable));
-    }
     /**
      * Adds a warning validation message.
      * @param message Message when validation evaluates to invalid.
@@ -123,7 +90,7 @@ public class ValidationResult {
      * @param throwable A thrown exception.
      */
     public void warn(String message, int errorCode, Throwable throwable) {
-        this.warn(propertyName, message, errorCode, throwable);
+        messages.add(new ValidationMessage(propertyName, MessageType.WARN, errorCode, message, throwable));
     }
 
     /**
@@ -131,40 +98,28 @@ public class ValidationResult {
      * @param message Message when validation evaluates to invalid.
      * @param throwable A thrown exception.
      */
-    public void warn(String propertyName, String message, Throwable throwable) {
+    public void warn(String message, Throwable throwable) {
         messages.add(new ValidationMessage(propertyName, MessageType.WARN, -1, message, throwable));
     }
-    /**
-     * Adds a warning validation message.
-     * @param message Message when validation evaluates to invalid.
-     * @param throwable A thrown exception.
-     */
-    public void warn(String message, Throwable throwable) {
-        this.warn(propertyName, message, throwable);
-    }
-    /**
-     * Adds a warning validation message.
-     * @param message Message when validation evaluates to invalid.
-     * @param errorCode -1 for unknown otherwise a specific error number.
-     */
-    public void warn(String propertyName, String message, int errorCode) {
-        messages.add(new ValidationMessage(propertyName, MessageType.WARN, errorCode, message));
-    }
+
     /**
      * Adds a warning validation message.
      * @param message Message when validation evaluates to invalid.
      * @param errorCode -1 for unknown otherwise a specific error number.
      */
     public void warn(String message, int errorCode) {
-        this.warn(propertyName, message, errorCode);
+        messages.add(new ValidationMessage(propertyName, MessageType.WARN, errorCode, message));
     }
+
     /**
      * Adds a warning validation message.
+     * @param propertyName The property name.
      * @param message Message when validation evaluates to invalid.
      */
     public void warn(String propertyName, String message) {
         messages.add(new ValidationMessage(propertyName, MessageType.WARN, message));
     }
+
     /**
      * Adds a warning validation message.
      * @param message Message when validation evaluates to invalid.
@@ -175,71 +130,38 @@ public class ValidationResult {
 
     /**
      * Adds an information validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     * @param errorCode -1 for unknown otherwise a specific error number.
-     * @param throwable A thrown exception.
-     */
-    public void info(String propertyName, String message, int errorCode, Throwable throwable) {
-        messages.add(new ValidationMessage(propertyName, MessageType.INFO, errorCode, message, throwable));
-    }
-    /**
-     * Adds an information validation message.
      * @param message Message when validation evaluates to invalid.
      * @param errorCode -1 for unknown otherwise a specific error number.
      * @param throwable A thrown exception.
      */
     public void info(String message, int errorCode, Throwable throwable) {
-        this.info(propertyName, message, errorCode, throwable);
+        messages.add(new ValidationMessage(propertyName, MessageType.INFO, errorCode, message, throwable));
     }
-    /**
-     * Adds an information validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     * @param throwable A thrown exception.
-     */
-    public void info(String propertyName, String message, Throwable throwable) {
-        messages.add(new ValidationMessage(propertyName, MessageType.INFO, -1, message, throwable));
-    }
+
     /**
      * Adds an information validation message.
      * @param message Message when validation evaluates to invalid.
      * @param throwable A thrown exception.
      */
     public void info(String message, Throwable throwable) {
-        this.info(propertyName, message, throwable);
+        messages.add(new ValidationMessage(propertyName, MessageType.INFO, -1, message, throwable));
     }
-    /**
-     * Adds an information validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     * @param errorCode -1 for unknown otherwise a specific error number.
-     */
-    public void info(String propertyName, String message, int errorCode) {
-        messages.add(new ValidationMessage(propertyName, MessageType.INFO, errorCode, message));
-    }
+
     /**
      * Adds an information validation message.
      * @param message Message when validation evaluates to invalid.
      * @param errorCode -1 for unknown otherwise a specific error number.
      */
     public void info(String message, int errorCode) {
-        this.info(propertyName, message, errorCode);
+        messages.add(new ValidationMessage(propertyName, MessageType.INFO, errorCode, message));
     }
-    /**
-     * Adds an information validation message.
-     * @param propertyName Property name
-     * @param message Message when validation evaluates to invalid.
-     */
-    public void info(String propertyName, String message) {
-        messages.add(new ValidationMessage(propertyName, MessageType.INFO, message));
-    }
+
     /**
      * Adds an information validation message.
      * @param message Message when validation evaluates to invalid.
      */
     public void info(String message) {
-        this.info(propertyName, message);
+        messages.add(new ValidationMessage(propertyName, MessageType.INFO, message));
     }
 
     /**

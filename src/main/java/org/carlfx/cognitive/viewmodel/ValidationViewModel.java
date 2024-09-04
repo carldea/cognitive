@@ -24,6 +24,7 @@ import org.carlfx.cognitive.validator.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +59,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, Property property) {
-        return super.addProperty(name, property);
+        super.addProperty(name, property);
+        return this;
     }
     /**
      * Adds a property based on a name and sets a string as the value.
@@ -68,7 +70,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, String value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
     /**
      * Adds a property based on a name and sets an int as the value.
@@ -78,7 +81,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, int value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
     /**
      * Adds a property based on a name and sets a long as the value.
@@ -88,7 +92,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, long value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
     /**
      * Adds a property based on a name and sets a float as the value.
@@ -98,7 +103,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, float value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
     /**
      * Adds a property based on a name and sets a double as the value.
@@ -108,7 +114,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, double value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
     /**
      * Adds a property based on a name and sets a boolean as the value.
@@ -118,7 +125,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, boolean value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
     /**
      * Adds a property based on a name and sets a collection as the value.
@@ -128,7 +136,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, Collection value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
     }
     /**
      * Adds a property based on a name and sets an object as the value.
@@ -138,7 +147,128 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
      */
     @Override
     public ValidationViewModel addProperty(String name, Object value) {
-        return super.addProperty(name, value);
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel setValue(Enum name, Object value) {
+        super.setValue(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel setPropertyValue(Enum name, Object value, boolean skip) {
+        super.setPropertyValue(name, value, skip);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel setPropertyValues(Enum name, Collection values, boolean skip) {
+        super.setPropertyValues(name, values, skip);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel setPropertyValue(Enum name, Object value) {
+        super.setPropertyValue(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel setPropertyValues(Enum name, Collection values) {
+        super.setPropertyValues(name, values);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, Property property) {
+        super.addProperty(name, property);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, String value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, int value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, long value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, float value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, double value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, boolean value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, Collection value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(String name, Collection value, boolean skip) {
+        super.addProperty(name, value, skip);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, Collection value, boolean skip) {
+        super.addProperty(name, value, skip);
+        return this;
+    }
+
+    @Override
+    public <T extends ViewModel> T addProperty(Enum name, Function<T, Collection> value) {
+        super.addProperty(name, value);
+        return (T) this;
+    }
+
+    @Override
+    public <T extends ViewModel> T addProperty(Enum name, Function<T, Collection> value, boolean skip) {
+        super.addProperty(name, value, skip);
+        return (T) this;
+    }
+
+    @Override
+    public ValidationViewModel addProperty(Enum name, Object value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public <T extends ViewModel> ValidationViewModel addProperty(String name, Function<T, Collection> value) {
+        super.addProperty(name, value);
+        return this;
+    }
+
+    @Override
+    public <T extends ViewModel> ValidationViewModel addProperty(String name, Function<T, Collection> value, boolean skip) {
+        super.addProperty(name, value, skip);
+        return this;
     }
 
     /**
@@ -377,6 +507,102 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
     @Override
     public ValidationViewModel addValidator(String name, String friendlyName, ConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, StringValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, BooleanValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, IntegerValidator validator) {
+        addValidator(name.toString(), friendlyName, validator);
+        return this;
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, LongValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, FloatValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, DoubleValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, ObjectValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, ListValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, CustomValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, BooleanConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, DoubleConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, FloatConsumerValidator validator) {
+        return Validatable.super.addValidator(name, friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, IntegerConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, ListConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, LongConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, ObjectConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, SetConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, StringConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
+    }
+
+    @Override
+    public ValidationViewModel addValidator(Enum name, String friendlyName, ConsumerValidator validator) {
+        return addValidator(name.toString(), friendlyName, validator);
     }
 
     /**
