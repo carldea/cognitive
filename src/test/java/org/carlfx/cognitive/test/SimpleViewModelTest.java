@@ -41,53 +41,30 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static org.carlfx.cognitive.test.SimpleViewModelTest.PersonField.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("SimpleViewModel Test")
 public class SimpleViewModelTest implements TestLifecycleLogger {
     private static final Logger LOG = LoggerFactory.getLogger(SimpleViewModelTest.class);
-    protected enum PersonForm {
-        FIRST_NAME,
-        LAST_NAME,
-        AGE,
+    public enum PersonField {
+        FIRST_NAME("First Name"),
+        LAST_NAME("Last Name"),
+        AGE("Age");
+
+        public final String name;
+        PersonField(String name){
+            this.name = name;
+        }
     }
-    public static String FIRST_NAME = "firstName";
-    public static String LAST_NAME = "lastName";
-    public static String AGE = "age";
+
+    public static String FIRST_NAME_STR = "firstName";
+    public static String LAST_NAME_STR = "lastName";
+    public static String AGE_STR = "age";
     @ParameterizedTest
     @DisplayName("Parameterized Enum as property name getProperty() Test - SimpleViewModel.getProperty(Enum) Test")
     @MethodSource("provideEnumPropertyNames")
     public void parameterizedEnumPropertyNameGetPropertyTest(SimpleViewModel simpleViewModel) {
-        StringProperty firstName = simpleViewModel.getProperty(PersonForm.FIRST_NAME);
-        assertNotNull(firstName);
-        assertTrue(firstName.isNotEmpty().get());
-
-        StringProperty lastName = simpleViewModel.getProperty(PersonForm.LAST_NAME);
-        assertNotNull(lastName);
-        assertTrue(lastName.isNotEmpty().get());
-
-        IntegerProperty age = simpleViewModel.getProperty(PersonForm.AGE);
-        assertNotNull(age);
-        assertTrue(age.greaterThan(0).get());
-    }
-
-    private static Stream<Arguments> provideEnumPropertyNames() {
-        return Stream.of(
-                Arguments.of(new SimpleViewModel()
-                        .addProperty(PersonForm.FIRST_NAME, "Barney")
-                        .addProperty(PersonForm.LAST_NAME,  "Rubble")
-                        .addProperty(PersonForm.AGE, 990)),
-                Arguments.of(new SimpleViewModel()
-                        .addProperty(PersonForm.FIRST_NAME, "Fred")
-                        .addProperty(PersonForm.LAST_NAME,  "Flintstone")
-                        .addProperty(PersonForm.AGE, 1000))
-        );
-    }
-
-    @ParameterizedTest
-    @DisplayName("Parameterized String property name getProperty() Test - SimpleViewModel.getProperty(Enum) Test")
-    @MethodSource("provideStringPropertyNames")
-    public void parameterizedStringPropertyNameGetPropertyTest(SimpleViewModel simpleViewModel) {
         StringProperty firstName = simpleViewModel.getProperty(FIRST_NAME);
         assertNotNull(firstName);
         assertTrue(firstName.isNotEmpty().get());
@@ -100,7 +77,8 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
         assertNotNull(age);
         assertTrue(age.greaterThan(0).get());
     }
-    private static Stream<Arguments> provideStringPropertyNames() {
+
+    private static Stream<Arguments> provideEnumPropertyNames() {
         return Stream.of(
                 Arguments.of(new SimpleViewModel()
                         .addProperty(FIRST_NAME, "Barney")
@@ -113,16 +91,45 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
         );
     }
 
+    @ParameterizedTest
+    @DisplayName("Parameterized String property name getProperty() Test - SimpleViewModel.getProperty(String) Test")
+    @MethodSource("provideStringPropertyNames")
+    public void parameterizedStringPropertyNameGetPropertyTest(SimpleViewModel simpleViewModel) {
+        StringProperty firstName = simpleViewModel.getProperty(FIRST_NAME_STR);
+        assertNotNull(firstName);
+        assertTrue(firstName.isNotEmpty().get());
+
+        StringProperty lastName = simpleViewModel.getProperty(LAST_NAME_STR);
+        assertNotNull(lastName);
+        assertTrue(lastName.isNotEmpty().get());
+
+        IntegerProperty age = simpleViewModel.getProperty(AGE_STR);
+        assertNotNull(age);
+        assertTrue(age.greaterThan(0).get());
+    }
+    private static Stream<Arguments> provideStringPropertyNames() {
+        return Stream.of(
+                Arguments.of(new SimpleViewModel()
+                        .addProperty(FIRST_NAME_STR, "Barney")
+                        .addProperty(LAST_NAME_STR,  "Rubble")
+                        .addProperty(AGE_STR, 990)),
+                Arguments.of(new SimpleViewModel()
+                        .addProperty(FIRST_NAME_STR, "Fred")
+                        .addProperty(LAST_NAME_STR,  "Flintstone")
+                        .addProperty(AGE_STR, 1000))
+        );
+    }
+
     @Test
     @DisplayName("SimpleViewModel.getPropertyValue(Enum and String) Test")
     void getPropertyValue(TestInfo testInfo) {
         // Expected
         String expected = "Fred";
         SimpleViewModel simpleViewModel = new SimpleViewModel();
-        simpleViewModel.addProperty(PersonForm.FIRST_NAME, expected);
+        simpleViewModel.addProperty(FIRST_NAME, expected);
 
         // Actual
-        String actual = simpleViewModel.getPropertyValue(PersonForm.FIRST_NAME);
+        String actual = simpleViewModel.getPropertyValue(FIRST_NAME);
 
         // test method.
         assertEquals(expected, actual, "getProperty(Enum) did not return expected value " + expected);
@@ -143,17 +150,17 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
         int expectedAge = 990;
 
         SimpleViewModel simpleViewModel = new SimpleViewModel()
-                .addProperty(PersonForm.FIRST_NAME, expectedFirstName)
-                .addProperty(PersonForm.LAST_NAME,  expectedLastName)
-                .addProperty(PersonForm.AGE, expectedAge);
+                .addProperty(FIRST_NAME, expectedFirstName)
+                .addProperty(LAST_NAME,  expectedLastName)
+                .addProperty(AGE, expectedAge);
 
         // testing the save method.
         simpleViewModel.save();
 
         // internally the save method will copy property values into the model values layer.
-        assertEquals(simpleViewModel.getValue(PersonForm.FIRST_NAME), expectedFirstName);
-        assertEquals(simpleViewModel.getValue(PersonForm.LAST_NAME), expectedLastName);
-        assertEquals((int)simpleViewModel.getValue(PersonForm.AGE), expectedAge);
+        assertEquals(simpleViewModel.getValue(FIRST_NAME), expectedFirstName);
+        assertEquals(simpleViewModel.getValue(LAST_NAME), expectedLastName);
+        assertEquals((int)simpleViewModel.getValue(AGE), expectedAge);
 
         SimpleViewModel simpleViewModel2 = new SimpleViewModel()
                 .addProperty(FIRST_NAME, expectedFirstName)
@@ -173,18 +180,18 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
     @Disabled
     void myTest() {
         ViewModel personVm = new SimpleViewModel()
-                .addProperty(PersonForm.FIRST_NAME, new Object());
-        ObjectProperty<Object> objectProperty = personVm.getProperty(PersonForm.FIRST_NAME);
+                .addProperty(FIRST_NAME, new Object());
+        ObjectProperty<Object> objectProperty = personVm.getProperty(FIRST_NAME);
 
         // custom binding if not null display date otherwise empty string.
         StringBinding dateStrProp = Bindings
-                .when(objectProperty.isNotNull())
+                .when(objectProperty.isNull())
                 .then(LocalDate.now().format(DateTimeFormatter.ofPattern("MMM d, yyyy")))
                 .otherwise("");
 
         LOG.info("Not Null =====> the dateStrProp.get() = %s".formatted(dateStrProp.get()));
         assertNotEquals("", dateStrProp.get(), "Should not be an empty string Should be a date formatted MMM d, yyyy");
-        personVm.setPropertyValue(PersonForm.FIRST_NAME, null);
+        personVm.setPropertyValue(FIRST_NAME, null);
         LOG.info("Is Null  =====> the dateStrProp.get() = %s".formatted(dateStrProp.get()));
         assertEquals("", dateStrProp.get(), "Should be an empty string not a date format string.");
 
@@ -195,7 +202,7 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
         ViewModel personVm = new SimpleViewModel()
                 .addProperty(FIRST_NAME, "Fred")
                 .addProperty(LAST_NAME, "Flintstone")
-                .addProperty(PersonForm.AGE, 54l)
+                .addProperty(AGE, 54l)
                 .addProperty("height", 123)
                 .addProperty("colors", Set.of("red", "blue"))
                 .addProperty("foods", List.of("bbq", "chips", "bbq"))
@@ -274,7 +281,7 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
         ViewModel personVm = new SimpleViewModel()
                 .addProperty(FIRST_NAME, "Fred")
                 .addProperty(LAST_NAME, "Flintstone")
-                .addProperty(PersonForm.AGE, 54l)
+                .addProperty(AGE, 54l)
                 .addProperty("height", 123)
                 .addProperty("colors", Set.of("red", "blue"))
                 .addProperty("foods", List.of("bbq", "chips", "bbq"))
