@@ -494,11 +494,11 @@ import java.util.stream.Collectors;
     /**
      * Create a validator for a list value based on a named property. When creating error messages the friendly name
      * is used instead of the property name.
-     * @param name Property name or property id used to add a validator.
-     * @param friendlyName A string of the validation message
-     * @param validator Validator based on the datatype list (ObservableList).
-     * @return ViewModel itself.
      *
+     * @param name         Property name or property id used to add a validator.
+     * @param friendlyName A string of the validation message
+     * @param validator    Validator based on the datatype list (ObservableList).
+     * @return ViewModel itself.
      */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, ListValidator validator) {
@@ -637,20 +637,6 @@ import java.util.stream.Collectors;
      */
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, IntegerConsumerValidator validator) {
-        return Validatable.super.addValidator(name, friendlyName, validator);
-    }
-
-    /**
-     * Create a validator for a List value based on a named property. When creating error messages the friendly name
-     * is used instead of the property name.
-     * @param name Property name or property id used to add a validator.
-     * @param friendlyName A string of the validation message
-     * @param validator Validator based on the datatype list (ObservableList).
-     * @return ViewModel itself.
-     *
-     */
-    @Override
-    public IdValidationViewModel addValidator(String name, String friendlyName, ListConsumerValidator validator) {
         return Validatable.super.addValidator(name, friendlyName, validator);
     }
 
@@ -802,7 +788,8 @@ import java.util.stream.Collectors;
 
     @Override
     public IdValidationViewModel addValidator(String name, String friendlyName, SetConsumerValidator validator) {
-        return Validatable.super.addValidator(name, friendlyName, validator);
+        Validatable.super.addValidator(name, friendlyName, validator);
+        return this;
     }
 
     @Override
@@ -852,7 +839,8 @@ import java.util.stream.Collectors;
 
     @Override
     public IdValidationViewModel addValidator(Enum name, String friendlyName, ListValidator validator) {
-        return Validatable.super.addValidator(name, friendlyName, validator);
+        Validatable.super.addValidator(name, friendlyName, validator);
+        return this;
     }
 
     @Override
@@ -882,7 +870,8 @@ import java.util.stream.Collectors;
 
     @Override
     public IdValidationViewModel addValidator(Enum name, String friendlyName, ListConsumerValidator validator) {
-        return Validatable.super.addValidator(name, friendlyName, validator);
+        Validatable.super.addValidator(name, friendlyName, validator);
+        return this;
     }
 
     @Override
@@ -897,7 +886,8 @@ import java.util.stream.Collectors;
 
     @Override
     public IdValidationViewModel addValidator(Enum name, String friendlyName, SetConsumerValidator validator) {
-        return Validatable.super.addValidator(name, friendlyName, validator);
+        Validatable.super.addValidator(name, friendlyName, validator);
+        return this;
     }
 
     @Override

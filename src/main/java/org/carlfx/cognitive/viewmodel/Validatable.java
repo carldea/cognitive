@@ -18,6 +18,8 @@
 package org.carlfx.cognitive.viewmodel;
 
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import org.carlfx.cognitive.validator.*;
 
 import java.util.List;
@@ -402,13 +404,15 @@ public interface Validatable {
      * @param friendlyName Friendly name of property name
      * @param validator    consumer validator converts to an actual type validator.
      *                     e.g. BooleanValidator (ReadOnlyBooleanProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
-     * @param <T>          U is a derived class of type ViewModel.
+     * @param <T>          T is a derived class of type ViewModel.
+     *
      * @return returns itself following the builder pattern.
      */
     default <T extends ViewModel> T addValidator(String name, String friendlyName, ListConsumerValidator validator) {
-        ListValidator tValidator = (ReadOnlyListProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        ListValidator tValidator = (ObservableList<?> prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
         getValidationManager().createFieldValidator(name, friendlyName, tValidator);
-        return (T) this;
+        T t = (T) this;
+        return t;
     }
 
     /**
@@ -506,7 +510,7 @@ public interface Validatable {
      * @return returns itself following the builder pattern.
      */
     default <T extends ViewModel> T addValidator(String name, String friendlyName, SetConsumerValidator validator) {
-        SetValidator tValidator = (ReadOnlySetProperty prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
+        SetValidator tValidator = (ObservableSet<?> prop, ViewModel vm) -> accumulateMessagesFunction(name, validator, prop);
         getValidationManager().createFieldValidator(name, friendlyName, tValidator);
         return (T) this;
     }
@@ -716,6 +720,42 @@ public interface Validatable {
      * @return ValidationMessage will be null or VALID. Messages will be in validation result.
      */
     default ValidationMessage accumulateMessagesFunction(String name, TypeConsumerValidator validator, ReadOnlyProperty prop) {
+        ValidationResult inputValidationResult = new ValidationResult(name);
+        // accumulate error messages
+        validator.accept(prop, inputValidationResult, this);
+        getValidationManager()
+                .getValidationMessages()
+                .addAll(inputValidationResult.getMessages());
+        return VALID;
+    }
+
+    /**
+     * Based on the property name, consumer validator will pass caller an empty validation result (no messages).
+     * @param name Property name
+     * @param validator Consumer validator allows caller to add messages to validation result object.
+     * @param prop the observable set
+     * @param <E> the type of object in set.
+     * @return ValidationMessage will be null or VALID. Messages will be in validation result.
+     */
+    default <E> ValidationMessage accumulateMessagesFunction(String name, TypeConsumerValidator validator, ObservableSet<E> prop) {
+        ValidationResult inputValidationResult = new ValidationResult(name);
+        // accumulate error messages
+        validator.accept(prop, inputValidationResult, this);
+        getValidationManager()
+                .getValidationMessages()
+                .addAll(inputValidationResult.getMessages());
+        return VALID;
+    }
+
+    /**
+     * Based on the property name, consumer validator will pass caller an empty validation result (no messages).
+     * @param name Property name
+     * @param validator Consumer validator allows caller to add messages to validation result object.
+     * @param prop the observable list
+     * @param <E> the type of object in list.
+     * @return ValidationMessage will be null or VALID. Messages will be in validation result.
+     */
+    default <E> ValidationMessage accumulateMessagesFunction(String name, TypeConsumerValidator validator, ObservableList<E> prop) {
         ValidationResult inputValidationResult = new ValidationResult(name);
         // accumulate error messages
         validator.accept(prop, inputValidationResult, this);

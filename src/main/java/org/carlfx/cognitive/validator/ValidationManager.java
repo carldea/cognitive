@@ -112,21 +112,20 @@ public class ValidationManager {
                 // 2. list?
                 // 3. set?
                 // 4. custom global name
-                ValidationMessage validationMessage = switch (validator) {
+
+                return switch (validator) {
                     case BooleanValidator boolValidator -> boolValidator.apply(viewModel.getProperty(name), viewModel);
                     case CustomValidator customValidator -> customValidator.apply(null, viewModel);
                     case DoubleValidator doubleValidator -> doubleValidator.apply(viewModel.getProperty(name), viewModel);
                     case FloatValidator floatValidator -> floatValidator.apply(viewModel.getProperty(name), viewModel);
                     case IntegerValidator intValidator -> intValidator.apply(viewModel.getProperty(name), viewModel);
-                    case ListValidator listValidator -> listValidator.apply(viewModel.getProperty(name), viewModel);
+                    case ListValidator listValidator -> listValidator.apply(viewModel.getObservableList(name), viewModel);
                     case LongValidator longValidator -> longValidator.apply(viewModel.getProperty(name), viewModel);
                     case ObjectValidator objValidator -> objValidator.apply(viewModel.getProperty(name), viewModel);
-                    case SetValidator setValidator -> setValidator.apply(viewModel.getProperty(name), viewModel);
+                    case SetValidator setValidator -> setValidator.apply(viewModel.getObservableSet(name), viewModel);
                     case StringValidator stringValidator -> stringValidator.apply(viewModel.getProperty(name), viewModel);
                     default -> throw new IllegalStateException("Unexpected value: " + validator);
                 };
-
-                return validationMessage;
             }).filter( vMsg -> vMsg != null).toList());
         });
         return validationMessages;

@@ -18,8 +18,11 @@
 package org.carlfx.cognitive.test;
 
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import org.carlfx.cognitive.validator.MessageType;
 import org.carlfx.cognitive.validator.ValidationMessage;
+import org.carlfx.cognitive.validator.ValidationResult;
 import org.carlfx.cognitive.viewmodel.ValidationViewModel;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
@@ -80,7 +83,20 @@ public class ValidationViewModelTest {
                     return VALID;
                 })
                 .addProperty("colors", Set.of("red", "blue"))
+                .addValidator("colors", "Favorite Colors", (ObservableSet<?> prop, ValidationResult vr, ViewModel vm) -> {
+                   prop.stream().forEach(s ->{
+                       System.out.println("s = " + s);
+                   });
+                })
                 .setPropertyValues("foods", List.of("bbq", "chips", "bbq"), true)
+                .addValidator(FOODS, "favorite foods", (ObservableList<?> foods, ValidationResult vr, ViewModel vm ) -> {
+                    foods.stream().forEach(s ->{
+                        System.out.println("s = " + s);
+                    });
+                    vr.warn("checking list of foods " + foods);
+                })
+                .addValidator(FOODS, "favorite foods", (ObservableList<?> foods, ViewModel vm ) ->
+                    new ValidationMessage("foods", MessageType.ERROR, "${%s} is required".formatted(FOODS)))
                 .addProperty("thing", new Object(){
                     @Override
                     public String toString() {

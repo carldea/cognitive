@@ -18,7 +18,7 @@
 
 package org.carlfx.cognitive.validator;
 
-import javafx.beans.property.ReadOnlyListProperty;
+import javafx.collections.ObservableList;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
 
@@ -37,5 +37,5 @@ import org.carlfx.cognitive.viewmodel.ViewModel;
  *            });
  * }</pre>
  */
-public interface ListConsumerValidator extends TypeConsumerValidator<ReadOnlyListProperty, ValidationResult, ViewModel> {
+public interface ListConsumerValidator extends TypeConsumerValidator<ObservableList<?>, ValidationResult, ViewModel> {
 }

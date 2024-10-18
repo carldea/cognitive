@@ -20,10 +20,10 @@ package org.carlfx.cognitive.viewmodel;
 
 import javafx.beans.Observable;
 import javafx.beans.property.Property;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -69,7 +69,7 @@ import java.util.function.Function;
  * }
  * </pre>
  */
-public interface ViewModel {
+public interface ViewModel extends PropertyObservable {
     /**
      * Copies the model values back into the property values.
      * @return Returns the ViewModel itself following the builder pattern.
@@ -242,34 +242,6 @@ public interface ViewModel {
      * @param <T> Type T is any derived ViewModel object.
      */
     <T extends ViewModel> T addProperty(Enum name, Function<T, Collection> value, boolean skip);
-
-    /**
-     * Returns a JavaFX Property to be used in a UI form.
-     * <pre>{@code
-     *    StringProperty myName = viewModel.getProperty("firstName");
-     *    System.out.println("My name is %s".formatted(myName.get()); // My name is Fred
-     * }
-     * </pre>
-     *
-     * @param name The property name. e.g. firstName, lastName.
-     * @return Returns a Property. The property contains the actual value.
-     * @param <T> T is the Property such as IntegerProperty or StringProperty.
-     */
-    <T extends Property> T getProperty(String name);
-
-    /**
-     * Returns a JavaFX Property to be used in a UI form.
-     * <pre>{@code
-     *    StringProperty myName = viewModel.getProperty("firstName");
-     *    System.out.println("My name is %s".formatted(myName.get()); // My name is Fred
-     * }
-     * </pre>
-     *
-     * @param name The property name as an enum value. e.g. PersonEnum { firstName, lastName }.
-     * @return Returns a Property. The property contains the actual value.
-     * @param <T> T is the Property such as IntegerProperty or StringProperty.
-     */
-    <T extends Property> T getProperty(Enum name);
 
     /**
      * Returns a value to be used in a UI form.
@@ -461,45 +433,6 @@ public interface ViewModel {
      * @param <T> T is an instance of a ViewModel.
      */
     <T extends ViewModel> T setValue(String name, Object value);
-
-    /**
-     * Returns an ObservableCollection based on property name.
-     * @param name property name.
-     * @return an observable collection. Used for the UI or testing.
-     */
-    public Observable getObservableCollection(String name);
-
-    /**
-     * Returns an ObservableList based on property name.
-     * @param name property name.
-     * @return an observable list. Used for the UI or testing.
-     * @param <T> T is type of object in an ObservableList.
-     */
-    <T> ObservableList<T> getObservableList(String name);
-
-    /**
-     * Returns an ObservableList based on property name.
-     * @param name property name as an Enum.
-     * @return an observable list. Used for the UI or testing.
-     * @param <T> T is type of object in an ObservableList.
-     */
-    <T> ObservableList<T> getObservableList(Enum name);
-
-    /**
-     * Returns an ObservableSet based on property name.
-     * @param name property name.
-     * @return an observable set. Used for the UI.
-     * @param <T> T is type of object in an ObservableSet.
-     */
-    <T> ObservableSet<T> getObservableSet(String name);
-
-    /**
-     * Returns an ObservableSet based on property name (as an Enum). The set is from the property value layer.
-     * @param name property name (as an Enum).
-     * @return an observable set. Used for the UI.
-     * @param <T> T is type of object in an ObservableSet.
-     */
-    <T> ObservableSet<T> getObservableSet(Enum name);
 
     /**
      * Removes the ObservableCollection from the view model.

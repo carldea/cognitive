@@ -19,12 +19,12 @@
 package org.carlfx.cognitive.validator;
 
 
-import javafx.beans.property.ReadOnlySetProperty;
+import javafx.collections.ObservableSet;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
 /**
  * Validator for a set as a property.
  */
-public interface SetValidator extends Validator<ReadOnlySetProperty, ViewModel> {
+public interface SetValidator extends Validator<ObservableSet<?>, ViewModel> {
 
 }

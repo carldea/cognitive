@@ -50,8 +50,8 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
     public enum PersonField {
         FIRST_NAME("First Name"),
         LAST_NAME("Last Name"),
-        AGE("Age");
-
+        AGE("Age"),
+        MARRIED("Married");
         public final String name;
         PersonField(String name){
             this.name = name;
@@ -95,15 +95,15 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
     @DisplayName("Parameterized String property name getProperty() Test - SimpleViewModel.getProperty(String) Test")
     @MethodSource("provideStringPropertyNames")
     public void parameterizedStringPropertyNameGetPropertyTest(SimpleViewModel simpleViewModel) {
-        StringProperty firstName = simpleViewModel.getProperty(FIRST_NAME_STR);
+        StringProperty firstName = simpleViewModel.getStringProperty(FIRST_NAME_STR);
         assertNotNull(firstName);
         assertTrue(firstName.isNotEmpty().get());
 
-        StringProperty lastName = simpleViewModel.getProperty(LAST_NAME_STR);
+        StringProperty lastName = simpleViewModel.getStringProperty(LAST_NAME_STR);
         assertNotNull(lastName);
         assertTrue(lastName.isNotEmpty().get());
 
-        IntegerProperty age = simpleViewModel.getProperty(AGE_STR);
+        IntegerProperty age = simpleViewModel.getIntegerProperty(AGE_STR);
         assertNotNull(age);
         assertTrue(age.greaterThan(0).get());
     }
@@ -119,6 +119,7 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
                         .addProperty(AGE_STR, 1000))
         );
     }
+
 
     @Test
     @DisplayName("SimpleViewModel.getPropertyValue(Enum and String) Test")
@@ -196,6 +197,34 @@ public class SimpleViewModelTest implements TestLifecycleLogger {
         assertEquals("", dateStrProp.get(), "Should be an empty string not a date format string.");
 
     }
+    @DisplayName("Testing various types")
+    @Test
+    void testVariousDataTypesGetProperty() {
+        //TextField firstName
+        ViewModel personVm = new SimpleViewModel()
+                .addProperty(FIRST_NAME, "Fred")
+                .addProperty(LAST_NAME, "Flintstone")
+                .addProperty(AGE, 54l)
+                .addProperty(MARRIED, true)
+                .addProperty("height", 123)
+                .addProperty("colors", Set.of("red", "blue"))
+                .addProperty("foods", List.of("bbq", "chips", "bbq"))
+                .addProperty("thing", new Object(){
+                    @Override
+                    public String toString() {
+                        return "thing ";
+                    }
+                })
+                .addProperty("mpg", 20.5f);
+        assertEquals("Fred", personVm.getStringProperty(FIRST_NAME).getValue());
+        assertEquals("Flintstone", personVm.getStringProperty(LAST_NAME).getValue());
+        assertEquals(54l, personVm.getLongProperty(AGE).getValue());
+        assertEquals(true, personVm.getBooleanProperty(MARRIED).getValue());
+        assertEquals(123, personVm.getIntegerProperty("height").get());
+        assertEquals("thing ", personVm.getObjectProperty("thing").get().toString());
+        assertEquals(20.5f, personVm.getFloatProperty("mpg").get());
+    }
+
     @Test
     void testVariousDataTypesAddProperty() {
         //TextField firstName

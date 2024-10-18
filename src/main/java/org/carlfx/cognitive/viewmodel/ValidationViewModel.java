@@ -422,12 +422,13 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
     }
     /**
      * Allows derived classes to create global type validators.
-     * @param name Property name
-     * @param friendlyName A string of the validation message
-     * @param validator Validator based on datatype
-     * @return ValidationViewModel itself.
      *
+     * @param name         Property name
+     * @param friendlyName A string of the validation message
+     * @param validator    Validator based on datatype
+     * @return ValidationViewModel itself.
      */
+    @Override
     public ValidationViewModel addValidator(String name, String friendlyName, ListValidator validator) {
         validationManager.createFieldValidator(name, friendlyName, validator);
         return this;
@@ -481,7 +482,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
 
     @Override
     public ValidationViewModel addValidator(String name, String friendlyName, ListConsumerValidator validator) {
-        return Validatable.super.addValidator(name, friendlyName, validator);
+        Validatable.super.addValidator(name, friendlyName, validator);
+        return this;
     }
 
     @Override
@@ -496,7 +498,8 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
 
     @Override
     public ValidationViewModel addValidator(String name, String friendlyName, SetConsumerValidator validator) {
-        return Validatable.super.addValidator(name, friendlyName, validator);
+        Validatable.super.addValidator(name, friendlyName, validator);
+        return this;
     }
 
     @Override

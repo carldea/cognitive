@@ -17,7 +17,7 @@
  */
 package org.carlfx.cognitive.validator;
 
-import javafx.beans.property.ReadOnlySetProperty;
+import javafx.collections.ObservableSet;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
 /**
@@ -35,5 +35,5 @@ import org.carlfx.cognitive.viewmodel.ViewModel;
  *            });
  * }</pre>
  */
-public interface SetConsumerValidator extends TypeConsumerValidator<ReadOnlySetProperty, ValidationResult, ViewModel> {
+public interface SetConsumerValidator extends TypeConsumerValidator<ObservableSet<?>, ValidationResult, ViewModel> {
 }
