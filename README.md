@@ -1,6 +1,7 @@
 🚧 Work in progress 🚧
 Please view the Wiki [here](https://github.com/carldea/cognitive/wiki)
 # What's new? [Release notes](https://github.com/carldea/cognitive/releases)
+- [1.4.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.4.0) 10/18/2024 - New support to get properties as common JavaFX properties. Avoids down casting.
 - [1.3.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.3.0) 09/04/2024 - Enums for property name lookups. Added SLF4J, JUnit5, began unit tests.
 - [1.2.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.2.0) 08/05/2024 - Validators support multiple validation messages.
 - [1.1.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.1.0) 06/28/2024 - `PropertyIdentifier` type objects to reference properties.
@@ -19,7 +20,7 @@ To see the demo's code see [Form demo](https://github.com/carldea/cognitive/tree
 
 *Gradle:*
 ```gradle
-implementation 'org.carlfx:cognitive:1.3.0'
+implementation 'org.carlfx:cognitive:1.4.0'
 ```
 
 *Maven:*
@@ -27,7 +28,7 @@ implementation 'org.carlfx:cognitive:1.3.0'
 <dependency>
     <groupId>org.carlfx</groupId>
     <artifactId>cognitive</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 </dependency>
 ```
 
@@ -257,10 +258,10 @@ var personVm = new ValidationViewModel()
 personVm.validate();
 
 if (personVm.hasErrors()) {
-        for (ValidationMessage vMsg : personVm.getValidationMessages()) {
-        System.out.println("msg Type: %s errorcode: %s, msg: %s".formatted(vMsg.messageType(), vMsg.errorCode(), vMsg.interpolate(personVm)) );
-        }
-        }
+    for (ValidationMessage vMsg : personVm.getValidationMessages()) {
+      System.out.println("msg Type: %s errorcode: %s, msg: %s".formatted(vMsg.messageType(), vMsg.errorCode(), vMsg.interpolate(personVm)) );
+    }
+}
 
 ```
 Output:
@@ -277,9 +278,9 @@ As each validation message contains a property of the field in question the code
 ```java
 ValidationMessage vMsg = ...;
 Label firstNameError = ...;
-        if (FIRST_NAME.equals(vMsg.propertyName())) {
-        firstNameError.setText(vMsg.message());
-        }
+if (FIRST_NAME.equals(vMsg.propertyName())) {
+    firstNameError.setText(vMsg.message());
+}
 
 ```
 Now let's fix the validation issues but instead of calling `validate()` you should call `save()`. A `ValidatationViewModel` overrides the `SimpleViewModel`'s `save()` method.
@@ -297,8 +298,8 @@ The correct thing to do is obtain the view model's model values by calling the f
 
 ```java
 if (personVm.hasErrorMsgs()) {
-        return;
-        }
+   return;
+}
 // Valid!
 // Obtain valid values from the view model.
 String validFirstName = personVm.getValue(FIRST_NAME); // You should not use personVm.getPropertyValue(FIRST_NAME);
@@ -363,14 +364,14 @@ To see how to add multiple validation messages shown below is a `StringConsumerV
 
 ```java
 viewModel.addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel viewModel) -> {
-        if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
-        validationResult.error(FIRST_NAME, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
-        }
-String firstChar = String.valueOf(prop.get().charAt(0));
-    if (firstChar.equals(firstChar.toLowerCase())) {
-        validationResult.error(FIRST_NAME, "${%s} first character must be upper case.".formatted(FIRST_NAME));
-        }
-        });
+   if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
+      validationResult.error(FIRST_NAME, "${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
+   }
+   String firstChar = String.valueOf(prop.get().charAt(0));
+   if (firstChar.equals(firstChar.toLowerCase())) {
+      validationResult.error(FIRST_NAME, "${%s} first character must be upper case.".formatted(FIRST_NAME));
+   }
+});
 ```
 
 Now let's add correct data with valid input.
