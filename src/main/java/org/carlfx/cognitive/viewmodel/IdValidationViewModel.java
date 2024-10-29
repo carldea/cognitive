@@ -914,6 +914,7 @@ import java.util.stream.Collectors;
         validationManager.invalidate();
         return this;
     }
+
     /**
      * True will force a save and returns the view model itself following the builder pattern.
      * The validation does not occur, property values copied to model values. false will call regular save().

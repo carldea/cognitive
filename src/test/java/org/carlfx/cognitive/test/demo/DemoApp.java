@@ -26,21 +26,36 @@ import org.carlfx.cognitive.loader.FXMLMvvmLoader;
 import org.carlfx.cognitive.loader.JFXNode;
 import org.carlfx.cognitive.viewmodel.ValidationViewModel;
 
-import static org.carlfx.cognitive.test.demo.AccountViewModel.EMAIL;
+import java.util.Optional;
+
+import static org.carlfx.cognitive.test.demo.AccountViewModel.AccountField.EMAIL;
 
 public class DemoApp extends Application {
 
     @Override
     public void start(Stage stage) {
         stage.setTitle("Demo AccountViewModel");
-        Config config = new Config(this.getClass().getResource("account-create.fxml"))
-                .updateViewModel("accountViewModel", (ValidationViewModel acctViewModel) -> {
-                    acctViewModel
-                            .setPropertyValue(EMAIL, "test")
-                            .save(true);
-                    System.out.println("Debug: " + acctViewModel);
-                });
-        JFXNode<Pane, Void> jfxNode = FXMLMvvmLoader.make(config);
+        Config config = new Config(this.getClass().getResource("account-create.fxml"));
+
+        // (OPTIONAL 1) Allows you to update a view model before FXML load.
+        config.updateViewModel("accountViewModel", (viewModel -> {
+
+        }));
+
+        // FXML Load.
+        JFXNode<Pane, AccountCreateController> jfxNode = FXMLMvvmLoader.make(config);
+
+        //  (OPTIONAL 2) First way to modify a view model AFTER form was loaded.
+        jfxNode.update("accountViewModel", (ValidationViewModel acctViewModel) -> {
+            acctViewModel.setPropertyValue(EMAIL, "test123");
+        });
+
+        //  (OPTIONAL 3) Second way to modify a view model AFTER from was loaded.
+        Optional<AccountViewModel> accountViewModel = jfxNode.getViewModel("accountViewModel");
+        accountViewModel.ifPresent(acctViewModel -> acctViewModel.setPropertyValue(EMAIL, "test123ABC"));
+
+        jfxNode.controller().resetErrorOverlays();
+
         Scene scene = new Scene(jfxNode.node());
         stage.setScene(scene);
         stage.show();

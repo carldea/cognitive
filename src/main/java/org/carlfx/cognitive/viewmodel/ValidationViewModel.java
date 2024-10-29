@@ -18,12 +18,15 @@
 
 package org.carlfx.cognitive.viewmodel;
 
+import javafx.application.Platform;
 import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
 import org.carlfx.cognitive.validator.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -654,6 +657,42 @@ public class ValidationViewModel extends SimpleViewModel implements Validatable 
 
         return (ValidationViewModel) super.save();
     }
+
+    /**
+     * Invokes validators associated with a property and passes the validation messages accumulated.
+     * @param propName property owning validators to be performed.
+     * @param validationMessagesConsumer after validation a list of validation messages are passed to the caller to be used to decorate the UI.
+     * @return Returns itself ValidationViewModel. Follows a builder type pattern.
+     */
+    public ValidationViewModel validateOnChange(Enum propName, Consumer<List<ValidationMessage>> validationMessagesConsumer) {
+        ChangeListener<?> propChecker = (obs, oldValue, newValue) -> {
+            // clear any first name messages.
+            getValidationManager()
+                    .getValidationMessages()
+                    .removeIf(validationMessage ->
+                            validationMessage.propertyName().equals(propName.name()));
+
+            // invoke validators.
+            List<Validator<?, ViewModel>> validators = getValidators(propName);
+            validators.forEach(validator -> {
+                ValidationMessage message = validator.apply(getProperty(propName), this);
+                if (message != null) {
+                    getValidationManager().getValidationMessages().add(message);
+                }
+            });
+
+            List<ValidationMessage> validationMessages = getValidationManager()
+                    .getValidationMessages()
+                    .stream()
+                    .filter(validationMessage ->
+                            validationMessage.propertyName().equals(propName.name()))
+                    .toList();
+            Platform.runLater(() -> validationMessagesConsumer.accept(validationMessages));
+        };
+        getProperty(propName).addListener(propChecker);
+        return this;
+    }
+
 
     /**
      * Overridden toString() to output data for debugging.

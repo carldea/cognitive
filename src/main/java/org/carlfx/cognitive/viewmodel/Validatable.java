@@ -810,4 +810,21 @@ public interface Validatable {
      * @return Returns a ValidationViewModel (itself) following the builder pattern.
      */
     <T extends ViewModel> T save(boolean force);
+
+    /**
+     * Returns a read only boolean property of the valid property. True if there are 0 messages.
+     * @return read only boolean property of the valid property.
+     */
+    default ReadOnlyBooleanProperty validProperty() {
+        return getValidationManager().validProperty();
+    }
+
+    /**
+     * Returns a read only boolean property of the invalid property. True if there are more than 0 messages.
+     * @return read only boolean property of the invalid property.
+     */
+    default ReadOnlyBooleanProperty invalidProperty() {
+        return getValidationManager().invalidProperty();
+    }
+
 }
