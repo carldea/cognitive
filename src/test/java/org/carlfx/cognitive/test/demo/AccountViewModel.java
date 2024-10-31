@@ -99,20 +99,6 @@ public class AccountViewModel extends ValidationViewModel {
                     return VALID;
                 });
 
-//        onValidProperty();
-//        onErrorProperty();
-//        onWarningProperty();
-//        onInfoProperty();
-//        ifValidOrElse(() -> {
-//            //
-//        }, () -> {
-//
-//        });
-//        ifValid(() -> {
-//
-//        });
-
-
         addProperty(TRANSACTION_TEXT, "");
         addProperty(FIRST_NAME_ERROR, "");
         addProperty(LAST_NAME_ERROR, "");
