@@ -27,51 +27,71 @@ import org.carlfx.cognitive.viewmodel.ViewModel;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.carlfx.cognitive.test.demo.AccountViewModel.AccountField.*;
+
 public class AccountViewModel extends ValidationViewModel {
-    public final static String FIRST_NAME = "firstName";
-    public final static String LAST_NAME = "lastName";
-    public final static String EMAIL = "email";
-    public final static String TRANSACTION_TEXT = "transactionText";
+    public enum AccountField {
+        FIRST_NAME("First Name"),
+        LAST_NAME("Last Name"),
+        EMAIL("Email"),
+        TRANSACTION_TEXT("Transaction Text"),
+        FIRST_NAME_ERROR,
+        LAST_NAME_ERROR,
+        EMAIL_ERROR,
+        ;
 
-    public static String IS_NOT_POPULATED = "isNotPopulated";
-    public static String SUBMIT_BUTTON_STATE = "buttonState";
-
-
-    public final static String ERROR = "error";
-    public final static String FIRST_NAME_ERROR = FIRST_NAME + ERROR;
-    public final static String LAST_NAME_ERROR = LAST_NAME + ERROR;
-    public final static String EMAIL_ERROR = EMAIL + ERROR;
+        public final String name;
+        AccountField(String name){
+            this.name = name;
+        }
+        AccountField(){
+            this.name = this.name();
+        }
+    }
 
     public AccountViewModel () {
         addProperty(FIRST_NAME, "")
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(FIRST_NAME, FIRST_NAME.name, (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel vm) -> {
                     if (prop.isEmpty().get()) {
-                        return new ValidationMessage(FIRST_NAME, MessageType.ERROR, "${%s} is required".formatted(FIRST_NAME));
+                        validationResult.error("${%s} is required".formatted(FIRST_NAME));
                     }
-                    return VALID;
                 })
-                .addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel viewModel) -> {
-                    if (prop.isEmpty().get() || prop.isNotEmpty().get() && prop.get().length() < 3) {
-                        validationResult.error("${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
-                    }
-                    String firstChar = String.valueOf(prop.get().charAt(0));
-                    if (firstChar.equals(firstChar.toLowerCase())) {
-                        validationResult.error("${%s} first character must be upper case.".formatted(FIRST_NAME));
+                .addValidator(FIRST_NAME, FIRST_NAME.name, (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel viewModel) -> {
+                    if (prop.isNotEmpty().get()) {
+                        // check first character
+                        String firstChar = String.valueOf(prop.get().charAt(0));
+                        if (firstChar.equals(firstChar.toLowerCase())) {
+                            validationResult.error("${%s} first character must be upper case.".formatted(FIRST_NAME));
+                        }
+                        // check minimum number of characters
+                        if (prop.get().length() < 4){
+                            validationResult.error("${%s} must be greater than 3 characters.".formatted(FIRST_NAME));
+                        }
                     }
                 });
 
         addProperty(LAST_NAME, "")
-                .addValidator(LAST_NAME, "Last Name", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(LAST_NAME, LAST_NAME.name, (ReadOnlyStringProperty prop, ValidationResult validationResult, ViewModel vm) -> {
                     if (prop.isEmpty().get()) {
-                        return new ValidationMessage(LAST_NAME, MessageType.ERROR, "${%s} is required".formatted(LAST_NAME));
+                        validationResult.error("${%s} is required".formatted(LAST_NAME));
                     }
-                    return VALID;
+                    if (prop.isNotEmpty().get()) {
+                        // check first character
+                        String firstChar = String.valueOf(prop.get().charAt(0));
+                        if (firstChar.equals(firstChar.toLowerCase())) {
+                            validationResult.error("${%s} first character must be upper case.".formatted(LAST_NAME));
+                        }
+                        // check minimum number of characters
+                        if (prop.get().length() ==1){
+                            validationResult.error("${%s} must be greater than 1 character.".formatted(LAST_NAME));
+                        }
+                    }
                 });
 
         addProperty(EMAIL, "")
-                .addValidator(EMAIL, "Email", (ReadOnlyStringProperty prop, ViewModel vm) -> {
+                .addValidator(EMAIL, EMAIL.name, (ReadOnlyStringProperty prop, ViewModel vm) -> {
                     String email = prop.get();
-                    Pattern pattern = Pattern.compile("([0-9 | a-z | - | \\.]*\\@.*\\.[0-9 | - | a-z]{2,})");
+                    Pattern pattern = Pattern.compile("([0-9 | a-z | A-Z | - | \\.]*\\@.*\\.[0-9 | - | a-z]{2,})");
                     Matcher matcher = pattern.matcher(email);
                     if (!matcher.matches()) {
                         return new ValidationMessage(EMAIL, MessageType.ERROR, "${%s} must be formatted abc@efg.com. Entered as %s".formatted(EMAIL, email));
@@ -79,30 +99,14 @@ public class AccountViewModel extends ValidationViewModel {
                     return VALID;
                 });
 
-        addProperty(SUBMIT_BUTTON_STATE, true);        // disable property (true) by default
-        addValidator(IS_NOT_POPULATED, "Is Not Populated", (Void prop, ViewModel vm) -> {
-            // if any fields are empty then it is not populated (invalid)
-            if (vm.getPropertyValue(FIRST_NAME).toString().isBlank()
-                    || vm.getPropertyValue(LAST_NAME).toString().isBlank()
-                    || vm.getPropertyValue(EMAIL).toString().isBlank()) {
-
-                // update is populated
-                vm.setPropertyValue(SUBMIT_BUTTON_STATE, true); // disable is true
-                // let caller know why it is not valid
-                return new ValidationMessage(SUBMIT_BUTTON_STATE, MessageType.ERROR, "Account form is not populated");
-            }
-            // update is populated
-            vm.setPropertyValue(SUBMIT_BUTTON_STATE, false); // disable is false (enabled)
-            return VALID;
-        });
         addProperty(TRANSACTION_TEXT, "");
-
         addProperty(FIRST_NAME_ERROR, "");
         addProperty(LAST_NAME_ERROR, "");
         addProperty(EMAIL_ERROR, "");
-
     }
+
+
     public void updateErrors(ValidationMessage validationMessage) {
-        setPropertyValue(validationMessage.propertyName() + ERROR, validationMessage.interpolate(this));
+        setPropertyValue(validationMessage.propertyName() + "_ERROR", validationMessage.interpolate(this));
     }
 }
