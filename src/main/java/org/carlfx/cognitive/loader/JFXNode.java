@@ -43,7 +43,7 @@ public record JFXNode<N extends Node, T>(N node, T controller, Set<NamedVm> name
      * @param updater A update consumer allowing the caller to update the view model
      * @param <S> A derived class of type ViewModel
      */
-    public <S extends ViewModel> void update(String variableName, Consumer<S> updater ) {
+    public <S extends ViewModel> void updateViewModel(String variableName, Consumer<S> updater ) {
         Optional<S> viewModelOption = getViewModel(variableName);
         viewModelOption.ifPresent(updater);
     }

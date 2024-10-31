@@ -39,16 +39,15 @@ public class DemoApp extends Application {
 
         // (OPTIONAL 1) Allows you to update a view model before FXML load.
         config.updateViewModel("accountViewModel", (viewModel -> {
-
+            // acctViewModel.setPropertyValue(...)
         }));
 
         // FXML Load.
         JFXNode<Pane, AccountCreateController> jfxNode = FXMLMvvmLoader.make(config);
 
         //  (OPTIONAL 2) First way to modify a view model AFTER form was loaded.
-        jfxNode.update("accountViewModel", (ValidationViewModel acctViewModel) -> {
-            acctViewModel.setPropertyValue(EMAIL, "test123");
-        });
+        jfxNode.updateViewModel("accountViewModel", (ValidationViewModel acctViewModel) ->
+            acctViewModel.setPropertyValue(EMAIL, "test123"));
 
         //  (OPTIONAL 3) Second way to modify a view model AFTER from was loaded.
         Optional<AccountViewModel> accountViewModel = jfxNode.getViewModel("accountViewModel");

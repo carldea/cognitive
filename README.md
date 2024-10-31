@@ -1,6 +1,7 @@
 🚧 Work in progress 🚧
 Please view the Wiki [here](https://github.com/carldea/cognitive/wiki)
 # What's new? [Release notes](https://github.com/carldea/cognitive/releases)
+- [1.5.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.5.0) 10/30/2024 - New support to get view model from a JFXNode record, new ways to monitor change and invoke validators on change.
 - [1.4.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.4.0) 10/18/2024 - New support to get properties as common JavaFX properties. Avoids down casting.
 - [1.3.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.3.0) 09/04/2024 - Enums for property name lookups. Added SLF4J, JUnit5, began unit tests.
 - [1.2.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.2.0) 08/05/2024 - Validators support multiple validation messages.
@@ -10,17 +11,16 @@ Please view the Wiki [here](https://github.com/carldea/cognitive/wiki)
 # Cognitive
 A lightweight JavaFX (21+) forms framework based on the MVVM UI architecture pattern.
 
-View Models maintain the state of a view (Form) and, in principle, should contain a controller's presentation logic.
-This
+View Model(s) maintain the state of a view (Form) and, in principle, should contain a controller's presentation logic.
 MVVM allows the developer to test the presentation logic without having to wire up a JavaFX controller during runtime.
 
 ## Quick Start
-To use Cognitive in your project, download and install Java 21 JDK. The library depends on JavaFX 21+
+To use Cognitive in your project, download and install Java 21+ JDK. The library depends on JavaFX 21+
 To see the demo's code see [Form demo](https://github.com/carldea/cognitive/tree/main/src/test/java/org/carlfx/cognitive/test/demo)
 
 *Gradle:*
 ```gradle
-implementation 'org.carlfx:cognitive:1.4.0'
+implementation 'org.carlfx:cognitive:1.5.0'
 ```
 
 *Maven:*
@@ -28,11 +28,11 @@ implementation 'org.carlfx:cognitive:1.4.0'
 <dependency>
     <groupId>org.carlfx</groupId>
     <artifactId>cognitive</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
 </dependency>
 ```
 
-Project using Java Modules (JPMS) will want to do the following in the consuming module:
+A project using Java Modules (JPMS) will want to do the following in the consuming module:
 ```java
 
 requires org.carlfx.cognitive;
@@ -48,7 +48,7 @@ Software developers creating form based applications will inevitably stumble acr
 
 However, there are drawbacks to the MVC pattern (especially in JavaFX). One main drawback is that the controller layer can be difficult (if not impossible) to test. It is especially concerning when you are JavaFX developer who has worked with FXML and controller classes.
 
-The pattern will avoid coupling the UI components, model (data) and presentation logic within a controller class. Because UI components are available during runtime it difficult to test interactions (presentation logic) between the model layer and UI.
+The pattern helps avoid coupling UI components, models (data) and presentation logic within a controller class. Because UI components are available during runtime it is difficult to test interactions (presentation logic) between the model and UI layers.
 
 **So, what is a solution?**
 
@@ -258,9 +258,9 @@ var personVm = new ValidationViewModel()
 personVm.validate();
 
 if (personVm.hasErrors()) {
-    for (ValidationMessage vMsg : personVm.getValidationMessages()) {
+   for (ValidationMessage vMsg : personVm.getValidationMessages()) {
       System.out.println("msg Type: %s errorcode: %s, msg: %s".formatted(vMsg.messageType(), vMsg.errorCode(), vMsg.interpolate(personVm)) );
-    }
+   }
 }
 
 ```
@@ -369,7 +369,7 @@ viewModel.addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, V
    }
    String firstChar = String.valueOf(prop.get().charAt(0));
    if (firstChar.equals(firstChar.toLowerCase())) {
-      validationResult.error(FIRST_NAME, "${%s} first character must be upper case.".formatted(FIRST_NAME));
+       validationResult.error(FIRST_NAME, "${%s} first character must be upper case.".formatted(FIRST_NAME));
    }
 });
 ```
@@ -377,6 +377,103 @@ viewModel.addValidator(FIRST_NAME, "First Name", (ReadOnlyStringProperty prop, V
 Now let's add correct data with valid input.
 
 <img width="488" alt="demo4" src="https://github.com/carldea/cognitive/assets/1594624/66c147a1-abc6-4ca7-b018-a4b6ba8b545c">
+
+# New Features
+Here are new features to simplify code in certain scenarios.
+
+- Updating the view model after JFXNode object is FXML loaded. `JFXNode`'s `updateViewModel()` method.
+- Getting the view model after JFXNode object is FXML loaded. `JFXNode`'s `getViewModel()` method.
+- Running a code block when a property has changed. `ViewModel`'s `.doOnChange()` method. 
+- Validate on change runs validators based on a property change. `ViewModel`'s
+- Determine if Form is invalid. The `ValidationViewModel`'s `onInvalid()` method.
+- Determine if Form is valid. `ValidationViewModel`'s `onValid()` method.
+
+## `JFXNode`'s `updateViewModel()`
+After calling the `FXMLMvvmLoader.make()` method a JFXNode object is returned representing the JavaFX Node and a Controller. Contained in the JFXNode (record) is a way to update the properties of a view model injected into the controller as shown in the code snippet below:
+```java
+JFXNode<Pane, AccountCreateController> jfxNode = FXMLMvvmLoader.make(config);
+
+//  Modify a view model AFTER UI form was created and loaded.
+jfxNode.updateViewModel("accountViewModel", (viewModel) ->
+   viewModel.setPropertyValue(EMAIL, "test123"));
+```
+Above your notice the `updateViewModel()` method takes the variable name inside the controller and a lambda containing the view model to be modified.
+
+## `JFXNode`'s `getViewModel()`
+After calling the `FXMLMvvmLoader.make()` method a JFXNode object is returned representing the JavaFX Node and a Controller. Contained in the JFXNode (record) is a way to get a view model previously injected into the controller as shown in the code snippet below:
+```java
+JFXNode<Pane, AccountCreateController> jfxNode = FXMLMvvmLoader.make(config);
+
+//  Another way to modify a view model AFTER UI form was loaded.
+Optional<AccountViewModel> accountViewModel = jfxNode.getViewModel("accountViewModel");
+
+```
+Above your notice the `getViewModel()` method takes the variable name and returns an `Optional` instance.
+
+## `ViewModel`'s `.doOnChange()`
+Did you ever just want to run a code block when a property value has changed? Now you can with the following:
+```java
+// fields change fire a validation
+accountViewModel.doOnChange(()->{
+       accountViewModel.validate();
+}, FIRST_NAME, LAST_NAME, EMAIL);
+```
+Above you'll notice a lambda (Runnable) to be executed when the properties first name, last name and email property values change.
+
+## Validate when a property changes. `ViewModel`'s `validateOnChange()` method.
+When a property value has changed its validators get run and any validation messages will be passed to help update the UI. Below is an example of decorating an icon overlay on the first name field to provide user feedback of the error.
+```java
+// Does not decorate field initially. As user types validation occurs for field.
+accountViewModel.validateOnChange(FIRST_NAME, (validationMessages) -> {
+    // clear decoration UI code.
+    firstNameTooltip.setText("");
+    firstNameErrorOverlay.setVisible(!validationMessages.isEmpty());
+
+    // process each message owned by Field
+    validationMessages.forEach(validationMessage -> {
+       // show overlay and update tooltip
+       accountViewModel.updateErrors(validationMessage);
+
+       String message = validationMessage.interpolate(accountViewModel);
+
+       // concatenate. Update UI
+       firstNameTooltip.setText(firstNameTooltip.getText() + message + "\n");
+    });
+});
+```
+Above you'll notice it clears the tooltip and error overlay, then it concatenates the error messages to be shown to the user.
+
+## The invalid property of a ValidationViewModel. `ValidationViewModel`'s `invalidProperty()` method
+The invalid property detects (true) when there are validation messages otherwise it is false. This is often used to validate the whole form and disabling or enabling a save button as shown below.
+
+```java
+// button disable property is bound to invalid property.
+submitButton.disableProperty().bind(accountViewModel.invalidProperty());
+```
+Above you'll notice a JavaFX Button's **disable** property is bound to the **invalid** property.
+Also, this gets set based on the following code: 
+
+```java
+// fields change fire a validation
+accountViewModel.doOnChange(()-> {
+    accountViewModel.validate();
+}, FIRST_NAME, LAST_NAME, EMAIL);
+```
+When validate is run, the error messages are collected (greater than zero) the invalid property gets set to true.
+
+## The valid property of a ValidationViewModel  `ValidationViewModel`'s `validProperty()` method
+After a validation view model's `validate()` or `save()` method is called you can check if there are zero validation messages or not as shown below.
+
+```java
+// validate form
+accountViewModel.validate();
+
+// is valid
+if (accountViewModel.validProperty().get()) {
+   // success!!!
+}
+```
+
 
 # References
 The following are links on the topic of UI/UX and Patterns:

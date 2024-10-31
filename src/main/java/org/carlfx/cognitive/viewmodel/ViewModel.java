@@ -18,7 +18,6 @@
 
 package org.carlfx.cognitive.viewmodel;
 
-import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.Property;
 
@@ -541,43 +540,30 @@ public interface ViewModel extends PropertyObservable {
     String debugPropertyMessage(Enum name);
 
     /**
-     * Perform work on the JavaFX application thread when a property value changes.
-     * @param doIt A runnable code block
-     * @param propertyName at least one property to monitor change.
-     * @param propertyNames Additional properties to monitor change.
-     * @param <T> A derived ViewModel type
-     * @return Returns itself ViewModel
-     */
-    default <T extends ViewModel> T doOnChange(Runnable doIt, Enum propertyName, Enum ...propertyNames) {
-        doOnChange(doIt, true, propertyName, propertyNames);
-        return (T) this;
-    }
-
-    /**
      * Perform work on either a non or JavaFX application thread when a property value changes.
      * @param doIt A runnable code block
-     * @param onUiThread True to run using JavaFX platform run later.
      * @param propertyName at least one property to monitor change.
      * @param propertyNames Additional properties to monitor change.
      * @param <T> A derived ViewModel type
      * @return Returns itself ViewModel
      */
-    default <T extends ViewModel> T doOnChange(Runnable doIt, boolean onUiThread, Enum propertyName, Enum ...propertyNames) {
+    default <T extends ViewModel> T doOnChange(Runnable doIt, Object propertyName, Object ...propertyNames) {
         assert propertyName != null;
-        List<Enum> list = new ArrayList<>();
+        List list = new ArrayList<>();
         list.add(propertyName);
         if (propertyNames.length > 0) {
             list.addAll(Arrays.stream(propertyNames).toList());
         }
         list.forEach(propertyName2 -> {
-            var property = getProperty(propertyName2);
+            Property property = null;
+            if (propertyName2 instanceof String pStr) {
+                property = getProperty(pStr);
+            } else if (propertyName2 instanceof Enum pEnum) {
+                property = getProperty(pEnum);
+            }
             if (property != null) {
                 property.addListener((observable, oldValue, newValue) -> {
-                    if (onUiThread) {
-                        Platform.runLater(doIt);
-                    } else {
-                        doIt.run();
-                    }
+                    doIt.run();
                 });
             }
         });
