@@ -21,9 +21,7 @@ package org.carlfx.cognitive.viewmodel;
 import javafx.beans.Observable;
 import javafx.beans.property.Property;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -540,4 +538,35 @@ public interface ViewModel extends PropertyObservable {
      * @return Returns a debug string of property values and model values.
      */
     String debugPropertyMessage(Enum name);
+
+    /**
+     * Perform work on either a non or JavaFX application thread when a property value changes.
+     * @param doIt A runnable code block
+     * @param propertyName at least one property to monitor change.
+     * @param propertyNames Additional properties to monitor change.
+     * @param <T> A derived ViewModel type
+     * @return Returns itself ViewModel
+     */
+    default <T extends ViewModel> T doOnChange(Runnable doIt, Object propertyName, Object ...propertyNames) {
+        assert propertyName != null;
+        List list = new ArrayList<>();
+        list.add(propertyName);
+        if (propertyNames.length > 0) {
+            list.addAll(Arrays.stream(propertyNames).toList());
+        }
+        list.forEach(propertyName2 -> {
+            Property property = null;
+            if (propertyName2 instanceof String pStr) {
+                property = getProperty(pStr);
+            } else if (propertyName2 instanceof Enum pEnum) {
+                property = getProperty(pEnum);
+            }
+            if (property != null) {
+                property.addListener((observable, oldValue, newValue) -> {
+                    doIt.run();
+                });
+            }
+        });
+        return (T) this;
+    }
 }

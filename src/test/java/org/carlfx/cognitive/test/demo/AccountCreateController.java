@@ -17,7 +17,6 @@
  */
 package org.carlfx.cognitive.test.demo;
 
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,9 +24,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.Text;
 import org.carlfx.cognitive.loader.InjectViewModel;
-import org.carlfx.cognitive.validator.ValidationMessage;
 
-import static org.carlfx.cognitive.test.demo.AccountViewModel.*;
+import static org.carlfx.cognitive.test.demo.AccountViewModel.AccountField.*;
 
 public class AccountCreateController {
 
@@ -70,48 +68,92 @@ public class AccountCreateController {
     @FXML
     public void initialize() {
 
-        // check if populated.
-        ChangeListener isNotPopulatedChecker = (obs, oldValue, newValue) -> {
-            resetErrorOverlays();
-            // TODO the following is ugly.
-            // invoke validator and submit button state will be set.
-            ValidationMessage validationMessage = accountViewModel.getValidators(IS_NOT_POPULATED).stream().findAny().get().apply(null, accountViewModel);
-            if (validationMessage != null) {
-                System.out.println(validationMessage.message());
-            }
-        };
+        // fields change fire a validation
+        accountViewModel.doOnChange(()->{
+            accountViewModel.validate();
+            System.out.println("invalid = " + accountViewModel.invalidProperty().getValue());
+            System.out.println("FIRST_NAME = " + accountViewModel.getStringProperty(FIRST_NAME).getValueSafe());
+            System.out.println("LAST_NAME = " + accountViewModel.getStringProperty(LAST_NAME).getValueSafe());
+            System.out.println("EMAIL = " + accountViewModel.getStringProperty(EMAIL).getValueSafe());
+        }, FIRST_NAME, LAST_NAME, EMAIL);
+
+        // When valid property changes do something
+        accountViewModel.validProperty().addListener(obs ->
+                System.out.println(">>>> is valid: " + accountViewModel.validProperty().getValue()));
+
+        // button disable property is bound to invalid property.
+        submitButton.disableProperty().bind(accountViewModel.invalidProperty());
+
+        // Does not decorate field initially. As user types validation occurs for field.
+        accountViewModel.validateOnChange(FIRST_NAME, (validationMessages) -> {
+            // clear decoration UI code.
+            firstNameTooltip.setText("");
+            firstNameErrorOverlay.setVisible(!validationMessages.isEmpty());
+
+            // process each message owned by Field
+            validationMessages.forEach(validationMessage -> {
+                // show overlay and update tooltip
+                accountViewModel.updateErrors(validationMessage);
+
+                String message = validationMessage.interpolate(accountViewModel);
+
+                // concatenate. Update UI
+                firstNameTooltip.setText(firstNameTooltip.getText() + message + "\n");
+            });
+        });
+
+        // Does not decorate field initially. As user types validation occurs for field.
+        accountViewModel.validateOnChange(LAST_NAME, (validationMessages) -> {
+            // clear decoration UI code.
+            lastNameTooltip.setText("");
+            lastNameErrorOverlay.setVisible(!validationMessages.isEmpty());
+
+            // process each message owned by Field
+            validationMessages.forEach(validationMessage -> {
+                // show overlay and update tooltip
+                accountViewModel.updateErrors(validationMessage);
+
+                String message = validationMessage.interpolate(accountViewModel);
+
+                // concatenate. Update UI
+                lastNameTooltip.setText(lastNameTooltip.getText() + message + "\n");
+            });
+        });
+
+        // Does not decorate field initially. As user types validation occurs for field.
+        accountViewModel.validateOnChange(EMAIL, (validationMessages) -> {
+            // clear decoration UI code.
+            emailTooltip.setText("");
+            emailOverlay.setVisible(!validationMessages.isEmpty());
+
+            // process each message owned by Field
+            validationMessages.forEach(validationMessage -> {
+                // show overlay and update tooltip
+                accountViewModel.updateErrors(validationMessage);
+
+                String message = validationMessage.interpolate(accountViewModel);
+
+                // concatenate. Update UI
+                emailTooltip.setText(emailTooltip.getText() + message + "\n");
+            });
+        });
 
         // every keystroke will check if form is populated.
-        firstNameTF.textProperty().addListener(isNotPopulatedChecker);
-        lastNameTF.textProperty().addListener(isNotPopulatedChecker);
-        emailTF.textProperty().addListener(isNotPopulatedChecker);
-
-        firstNameTF.textProperty().bindBidirectional(accountViewModel.getProperty(FIRST_NAME));
+        firstNameTF.textProperty().bindBidirectional(accountViewModel.getStringProperty(FIRST_NAME));
         lastNameTF.textProperty().bindBidirectional(accountViewModel.getProperty(LAST_NAME));
         emailTF.textProperty().bindBidirectional(accountViewModel.getProperty(EMAIL));
 
-        submitButton.disableProperty().bind(accountViewModel.getProperty(SUBMIT_BUTTON_STATE));
         transactionMessageText.textProperty().bindBidirectional(accountViewModel.getProperty(TRANSACTION_TEXT));
+        resetErrorOverlays();
     }
     private void clearForm() {
         // TODO accountViewModel.reset()
-        accountViewModel.setPropertyValue(FIRST_NAME, "");
-        accountViewModel.setPropertyValue(LAST_NAME, "");
-        accountViewModel.setPropertyValue(EMAIL, "");
-        accountViewModel.setPropertyValue(TRANSACTION_TEXT, "");
-
-        // TODO refactor to use view model instead
-        emailOverlay.setVisible(false);
-        emailTooltip.setText("");
-        firstNameErrorOverlay.setVisible(false);
-        firstNameTooltip.setText("");
-        lastNameErrorOverlay.setVisible(false);
-        lastNameTooltip.setText("");
+        accountViewModel.reset();
+        resetErrorOverlays();
         submitButton.setDisable(true);
 
-
     }
-    private void resetErrorOverlays() {
+    public void resetErrorOverlays() {
         firstNameTooltip.setText("");
         firstNameErrorOverlay.setVisible(false);
         lastNameTooltip.setText("");
@@ -123,36 +165,18 @@ public class AccountCreateController {
     @FXML
     private void submitAction(ActionEvent actionEvent) {
         accountViewModel.save();
-        if (accountViewModel.hasErrorMsgs()) {
-            resetErrorOverlays();
-            accountViewModel.getValidationMessages().forEach(validationMessage -> {
-                // show overlay and update tooltip
-                accountViewModel.updateErrors(validationMessage);
 
-                System.out.println( validationMessage );
-
-                String propName = validationMessage.propertyName();
-                String message = validationMessage.interpolate(accountViewModel);
-
-                if (FIRST_NAME.equals(propName)) {
-                    // concatenate.
-                    firstNameTooltip.setText(firstNameTooltip.getText() + message + "\n");
-                    firstNameErrorOverlay.setVisible(true);
-                } else if (LAST_NAME.equals(propName)) {
-                    lastNameTooltip.setText(message);
-                    lastNameErrorOverlay.setVisible(true);
-                } else if (EMAIL.equals(propName)) {
-                    emailTooltip.setText(message);
-                    emailOverlay.setVisible(true);
-                }
-            });
+        // Testing the newer invalid property
+        if (accountViewModel.invalidProperty().get()) {
             accountViewModel.setPropertyValue(TRANSACTION_TEXT, "Error :-(");
-        } else {
+        }
+
+        // Testing the newer valid property
+        if (accountViewModel.validProperty().get()){
             System.out.println("Account created successful! ");
             System.out.println("firstName = " + accountViewModel.getValue(FIRST_NAME));
             System.out.println(" lastName = " + accountViewModel.getValue(LAST_NAME));
             System.out.println("    email = " + accountViewModel.getValue(EMAIL));
-
             accountViewModel.setPropertyValue(TRANSACTION_TEXT, "Success!!!");
         }
     }

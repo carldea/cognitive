@@ -20,8 +20,6 @@ package org.carlfx.cognitive.test;
 
 import org.carlfx.cognitive.viewmodel.IdSimpleViewModel;
 import org.carlfx.cognitive.viewmodel.SimplePropertyIdentifier;
-import org.carlfx.cognitive.viewmodel.SimpleViewModel;
-import org.carlfx.cognitive.viewmodel.ViewModel;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +34,7 @@ public class IdSimpleViewModelTest {
 
         ConceptRecord caseSigConceptRecord = new ConceptRecord(UUID.randomUUID(), "Case Significance", "Case");
         ConceptRecord caseInsenstiveConcept = new ConceptRecord(UUID.randomUUID(), "Case Insensitive", "Insensitive");
-
+        ConceptPropertyIdentifier caseSigProperty = new ConceptPropertyIdentifier(caseSigConceptRecord);
         //TextField firstName
         IdSimpleViewModel personVm = new IdSimpleViewModel()
                 .addProperty("firstName", "Fred")
@@ -52,7 +50,10 @@ public class IdSimpleViewModelTest {
                 })
                 .addProperty("mpg", 20.5f)
                 .addProperty(spId, "hello") // otherName SimplePropertyIdentifier with text as value
-                .addProperty(new ConceptPropertyIdentifier(caseSigConceptRecord), caseInsenstiveConcept); // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
+                .addProperty(caseSigProperty, caseInsenstiveConcept); // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
+        personVm.doOnChange(()->{
+            System.out.println("===== Case Significance: " + personVm.getProperty(caseSigProperty));
+        }, caseSigProperty);
 
         log("--------------");
         log("Creation personVm \n" + personVm);
@@ -118,8 +119,10 @@ public class IdSimpleViewModelTest {
                 })
                 .addProperty("mpg", 20.5f)
                 .addProperty(spId, "hello") // SimplePropertyIdentifier with text as value
-                .addProperty(new ConceptPropertyIdentifier(caseSigConceptRecord), caseInsenstiveConcept); // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
-
+                .addProperty(caseSigProperty, caseInsenstiveConcept); // Custom PropertyIdentifier Concept oriented value. propertyId (case sig) -> Property Value (Case insensitive).
+        personVm2.doOnChange(()->{
+            System.out.println("===== Case Significance: " + personVm2.getProperty(caseSigProperty.getPropertyId()));
+        }, caseSigProperty);
         personVm2.setPropertyValue("firstName", "Mary");
         personVm2.setPropertyValue("age", 20);
         personVm2.setPropertyValue("height", 555);

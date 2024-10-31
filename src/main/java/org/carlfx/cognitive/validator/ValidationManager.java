@@ -17,6 +17,12 @@
  */
 package org.carlfx.cognitive.validator;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.carlfx.cognitive.viewmodel.ViewModel;
 
 import java.util.*;
@@ -34,9 +40,8 @@ import java.util.*;
 public class ValidationManager {
     private final Map<String, String> friendlyNameMap = new LinkedHashMap<>();
     private Map<String, List<Validator<?, ViewModel>>> validatorsMap = new LinkedHashMap<>();
-    private Set<String> triggerValidatorSet = new HashSet<>();
 
-    private List<ValidationMessage> validationMessages = new ArrayList<>();
+    private ObservableList<ValidationMessage> validationMessages = FXCollections.observableList(new ArrayList<>());
 
     /**
      * Default constructor.
@@ -212,5 +217,39 @@ public class ValidationManager {
      */
     public Map<String, String> getFriendlyNameMap() {
         return friendlyNameMap;
+    }
+
+    /**
+     * Valid property to allow caller to monitor validation messages.
+     */
+    protected BooleanProperty isValidProperty;
+
+    /**
+     * Invalid property to allow caller to monitor validation messages.
+     */
+    protected BooleanProperty isInvalidProperty;
+
+    /**
+     * A read only boolean property. True if there are zero error messages otherwise false.
+     * @return Read-only BooleanProperty instance.
+     */
+    public ReadOnlyBooleanProperty validProperty() {
+        if (isValidProperty == null) {
+            isValidProperty = new SimpleBooleanProperty();
+            isValidProperty.bind(Bindings.size(validationMessages).isEqualTo(0));
+        }
+        return isValidProperty;
+    }
+
+    /**
+     * A read only boolean property. True if there are greater than zero error messages otherwise false.
+     * @return Read-only BooleanProperty instance.
+     */
+    public ReadOnlyBooleanProperty invalidProperty() {
+        if (isInvalidProperty == null) {
+            isInvalidProperty = new SimpleBooleanProperty();
+            isInvalidProperty.bind(Bindings.size(validationMessages).greaterThan(0));
+        }
+        return isInvalidProperty;
     }
 }

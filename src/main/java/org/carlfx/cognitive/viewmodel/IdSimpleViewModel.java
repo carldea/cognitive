@@ -713,6 +713,42 @@ public class IdSimpleViewModel extends SimpleViewModel {
         );
     }
 
+    /**
+     * Perform work on either a non or JavaFX application thread when a property value changes.
+     * @param doIt A runnable code block
+     * @param propertyName at least one property to monitor change.
+     * @param propertyNames Additional properties to monitor change.
+     * @param <T> A derived ViewModel type
+     * @return Returns itself ViewModel
+     */
+    public <T extends ViewModel> T doOnChange(Runnable doIt, Object propertyName, Object ...propertyNames) {
+        assert propertyName != null;
+        List list = new ArrayList<>();
+        list.add(propertyName);
+        if (propertyNames.length > 0) {
+            list.addAll(Arrays.stream(propertyNames).toList());
+        }
+        list.forEach(propertyName2 -> {
+            Property property = null;
+            if (propertyName2 instanceof String pStr) {
+                property = getProperty(pStr);
+            } else if (propertyName2 instanceof Enum pEnum) {
+                property = getProperty(pEnum);
+            } else if (propertyName2 instanceof PropertyIdentifier pIdentifier) {
+                property = getProperty(pIdentifier);
+            } else {
+                property = getProperty(String.valueOf(propertyName2));
+            }
+
+            if (property != null) {
+                property.addListener((observable, oldValue, newValue) -> {
+                        doIt.run();
+                });
+            }
+        });
+        return (T) this;
+    }
+
     @Override
     public String toString() {
         return "IdSimpleViewModel {\n" +
