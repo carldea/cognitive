@@ -1,6 +1,7 @@
 🚧 Work in progress 🚧
 Please view the Wiki [here](https://github.com/carldea/cognitive/wiki)
 # What's new? [Release notes](https://github.com/carldea/cognitive/releases)
+- [1.5.1](https://github.com/carldea/cognitive/releases/tag/release%2F1.5.1) 11/11/2024 - Updated logging dependencies to be in test scope.
 - [1.5.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.5.0) 10/30/2024 - New support to get view model from a JFXNode record, new ways to monitor change and invoke validators on change.
 - [1.4.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.4.0) 10/18/2024 - New support to get properties as common JavaFX properties. Avoids down casting.
 - [1.3.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.3.0) 09/04/2024 - Enums for property name lookups. Added SLF4J, JUnit5, began unit tests.
@@ -20,7 +21,7 @@ To see the demo's code see [Form demo](https://github.com/carldea/cognitive/tree
 
 *Gradle:*
 ```gradle
-implementation 'org.carlfx:cognitive:1.5.0'
+implementation 'org.carlfx:cognitive:1.5.1'
 ```
 
 *Maven:*
@@ -28,7 +29,7 @@ implementation 'org.carlfx:cognitive:1.5.0'
 <dependency>
     <groupId>org.carlfx</groupId>
     <artifactId>cognitive</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
 </dependency>
 ```
 
