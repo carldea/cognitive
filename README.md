@@ -146,15 +146,10 @@ private void initialize() {
 
 @FXML
 private void saveAction(ActionEvent ae) {
-    personViewModel.save(); // validates
+    personViewModel.save(); // assumes the subclass overrides the save() method that calls validates, and if valid write to the database based on the (model value layer)
     if (personViewModel.hasErrorMsgs()) {
        // apply messages to badges or decorate control for fields or global messages.  
-    } else {
-       // view model get model values and has logic to persist data.
-       String firstName = personViewModel.getValue(FIRST_NAME);
-       String lastName = personViewModel.getValue(LAST_NAME);
-       // personViewModel.writePerson(new Person(firstName, lastName)); 
-    }
+    } 
 }
 ```
 Above you can see there are 4 steps to using View Models:
