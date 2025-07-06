@@ -48,43 +48,55 @@ public class FXMLMvvmLoader {
 
     /**
      * Creates a JFXNode representing the JavaFX Node (FXML), Controller instance and a list of Named
-     * @param fxml URL of the FXML file in resources.
+     *
+     * @param fxml            URL of the FXML file in resources.
      * @param namedViewModels The named view models. A controller class can have any number of view models (annotated with InjectViewModel).
-     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of Named.
+     * @param <N>             A JavaFX Node type parameter.
+     * @param <T>             A Controller type parameter.
+     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of NamedVm.
      */
-    public static JFXNode make(URL fxml, NamedVm...namedViewModels) {
+    public static <N extends Node, T> JFXNode<N, T> make(URL fxml, NamedVm... namedViewModels) {
         return make(new Config(fxml), namedViewModels);
     }
 
     /**
      * Creates a JFXNode representing the JavaFX Node (FXML), Controller instance and a list of Named
-     * @param fxml URL of the FXML file in resources.
+     *
+     * @param fxml            URL of the FXML file in resources.
      * @param controllerClass A JavaFX controller class.
      * @param namedViewModels The named view models. A controller class can have any number of view models (annotated with InjectViewModel).
-     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of Named.
+     * @param <N>             A JavaFX Node type parameter.
+     * @param <T>             A Controller type parameter.
+     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of NamedVm.
      */
-    public static JFXNode make(URL fxml, Class controllerClass, NamedVm...namedViewModels) {
+    public static <N extends Node, T> JFXNode<N, T> make(URL fxml, Class<T> controllerClass, NamedVm... namedViewModels) {
         return make(new Config(fxml, controllerClass), namedViewModels);
     }
 
     /**
      * Creates a JFXNode representing the JavaFX Node (FXML), Controller instance and a list of Named
-     * @param fxml URL of the FXML file in resources.
-     * @param controller A JavaFX controller instance. A caller may construct their own instance to be used.
+     *
+     * @param fxml            URL of the FXML file in resources.
+     * @param controller      A JavaFX controller instance. A caller may construct their own instance to be used.
      * @param namedViewModels The named view models. A controller class can have any number of view models (annotated with InjectViewModel).
-     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of Named.
+     * @param <N>             A JavaFX Node type parameter.
+     * @param <T>             A Controller type parameter.
+     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of NamedVm.
      */
-    public static JFXNode make(URL fxml, Object controller, NamedVm...namedViewModels) {
+    public static <N extends Node, T> JFXNode<N, T> make(URL fxml, T controller, NamedVm... namedViewModels) {
         return make(new Config(fxml, controller), namedViewModels);
     }
 
     /**
      * Creates a JFXNode representing the JavaFX Node (FXML), Controller instance and a list of Named
-     * @param config A Config object containing URL(FXML), and other configurations to assemble a JFXNode.
+     *
+     * @param config          A Config object containing URL(FXML), and other configurations to assemble a JFXNode.
      * @param namedViewModels A list of named view models. A controller class can have any number of view models (annotated with InjectViewModel).
-     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of Named.
+     * @param <N>             A JavaFX Node type parameter.
+     * @param <T>             A Controller type parameter.
+     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of NamedVm.
      */
-    public static JFXNode make(Config config, List<NamedVm> namedViewModels) {
+    public static <N extends Node, T> JFXNode<N, T> make(Config config, List<NamedVm> namedViewModels) {
         NamedVm[] namedVms = new NamedVm[namedViewModels.size()];
         namedViewModels.toArray(namedVms); // fill the array
         return make(config, namedVms);
@@ -92,42 +104,45 @@ public class FXMLMvvmLoader {
 
     /**
      * Creates a JFXNode representing the JavaFX Node (FXML), Controller instance and a list of Named
-     * @param config A Config object containing URL(FXML), and other configurations to assemble a JFXNode.
+     *
+     * @param config          A Config object containing URL(FXML), and other configurations to assemble a JFXNode.
      * @param namedViewModels variable argument parameter of named view models. A controller class can have any number of view models (annotated with InjectViewModel).
-     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of Named.
+     * @param <N>             A JavaFX Node type parameter.
+     * @param <T>             A Controller type parameter.
+     * @return A JFXNode instance representing the JavaFX Node (FXML), Controller instance and a list of NamedVm.
      */
-    public static JFXNode make(Config config, NamedVm...namedViewModels) {
+    @SuppressWarnings("unchecked")  // Required for casts when using reflection and FXMLLoader
+    public static <N extends Node, T> JFXNode<N, T> make(Config config, NamedVm... namedViewModels) {
         Map<String, NamedVm> namedViewModelMap = new TreeMap<>();
         // scan from config
-        if (config.namedViewModels() != null && config.namedViewModels().length > 0) {
-            for(NamedVm namedVm: config.namedViewModels()) {
+        if (config.namedViewModels() != null) {
+            for (NamedVm namedVm : config.namedViewModels()) {
                 namedViewModelMap.putIfAbsent(namedVm.variableName(), namedVm);
             }
         }
 
         // scan from namedViewModels array
-        if (namedViewModels != null && namedViewModels.length > 0) {
-            for(NamedVm namedVm: namedViewModels) {
+        if (namedViewModels != null) {
+            for (NamedVm namedVm : namedViewModels) {
                 namedViewModelMap.putIfAbsent(namedVm.variableName(), namedVm);
             }
         }
 
-        Object controller = null;
+        T controller = null;
         if (config.controllerClass() != null && config.controller() == null) {
-            // When caller specifies an instance of the javafx controller.
+            // When caller specifies a controller class
             try {
-                controller = config.controllerClass().getDeclaredConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                controller = (T) config.controllerClass().getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
         } else if (config.controller() != null) {
-            // When caller specifies the javafx controller class
-            controller = config.controller();
-        } else {
-            // TODO: verify the code below is able to grab the controller from the FXML file
+            // When caller specifies an instance of the javafx controller
+            controller = (T) config.controller();
         }
 
-        Node node = null;
+        N node;
         try {
             FXMLLoader loader = new FXMLLoader(config.fxml());
             final Set<NamedVm> namedVms = new LinkedHashSet<>(); // add order
@@ -142,27 +157,24 @@ public class FXMLMvvmLoader {
                             return controllerInFxml;
                         }
                         return null;
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                             NoSuchMethodException e) {
                         throw new RuntimeException(e);
                     }
                 });
             } else {
                 // When caller is supplying a controller class or controller instance.
-                if (controller != null) {
-                    // also get a list of ViewModels
-                    namedVms.addAll(injectViewModels(controller, namedViewModelMap, config.getViewModelUpdaterMap()));
-                    //LOG.debug("Injecting ViewModels into controller class %s with the following fields: %s".formatted(controller.getClass().getName(), namedVms));
-                    loader.setController(controller);
-                }
+                namedVms.addAll(injectViewModels(controller, namedViewModelMap, config.getViewModelUpdaterMap()));
+                loader.setController(controller);
             }
 
             node = loader.load();
             controller = loader.getController();
 
-            return new JFXNode(node, controller, namedVms);
+            return new JFXNode<>(node, controller, namedVms);
 
         } catch (IOException e) {
-            throw new RuntimeException("Error unable to load %s.".formatted(config.fxml().toString()),e);
+            throw new RuntimeException("Error unable to load %s.".formatted(config.fxml().toString()), e);
         }
 
     }
@@ -171,16 +183,18 @@ public class FXMLMvvmLoader {
      * A controller will contain annotated view models that will need instances injected or instantiated.
      * Method allows caller to create a map to be passed in to collect all view models inside the controller.
      * Also, the parameter updateConsumerMap represents a way for the caller to update properties prior to injection.
-     * Returns a list of NamedVm objects each representing the variable names to
-     * @param controller The JavaFX controller class possibly containing view models
+     * Returns a list of NamedVm objects each representing the variable names and their corresponding view model
+     * instances found in the controller.
+     *
+     * @param controller        The JavaFX controller class possibly containing view models
      * @param namedViewModelMap A map consisting of variable name as the key and view model as the value.
      * @param updateConsumerMap An update consumer map, allowing caller to update view model properties prior to injection.
-     * @param <U> A typed ViewModel provided for the consumer (code block). This allows the user of the API to declare a
-     *           typed ViewModel to downcast if needed.
-     *
+     * @param <U>               A typed ViewModel provided for the consumer (code block). This allows the user of the API to declare a
+     *                          typed ViewModel to downcast if needed.
      * @return A list of NamedVm objects from inside the JavaFX controller class.
      */
-    protected static <U extends ViewModel> List<NamedVm> injectViewModels(Object controller, Map<String, NamedVm> namedViewModelMap, Map<String, List<Consumer<U>>> updateConsumerMap) {
+    protected static <U extends ViewModel> List<NamedVm> injectViewModels(Object controller, Map<String,
+            NamedVm> namedViewModelMap, Map<String, List<Consumer<U>>> updateConsumerMap) {
         List<NamedVm> names = new ArrayList<>();
         for (Field field : controller.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(InjectViewModel.class)) {
@@ -203,15 +217,16 @@ public class FXMLMvvmLoader {
                         }
                     } else {
                         // The user has chosen to instantiate field.
+                        names.add(new NamedVm(fieldName, (ViewModel) viewModel));
                     }
                 } catch (IllegalAccessException | NoSuchMethodException | InstantiationException |
                          InvocationTargetException e) {
-                    throw new RuntimeException("%s class field %s".formatted(controller.getClass().getName(), field),e);
+                    throw new RuntimeException("%s class field %s".formatted(controller.getClass().getName(), field), e);
                 }
             }
         }
         // Iterate through the available injected view models to run the consumer updaters (callers will update the view model)
-        for(NamedVm namedVm:names) {
+        for (NamedVm namedVm : names) {
             if (updateConsumerMap.containsKey(namedVm.variableName())) {
                 updateConsumerMap
                         .get(namedVm.variableName()) /* get updaters */
