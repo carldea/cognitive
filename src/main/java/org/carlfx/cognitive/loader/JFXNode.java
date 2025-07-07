@@ -28,22 +28,21 @@ import java.util.function.Consumer;
 /**
  * A record that represents a JavaFX Node, Controller, and a collection of view models inside the controller class.
  * A JFXNode is returned after using the FXMLMvvmLoader.make() method.
- * @param node - JavaFX Node to be used on the Scene graph represented from an FXML file.
- * @param controller - An instance of the controller identified inside.
- * @param namedViewModels - A set of named variables referencing View Models inside controller.
- * @param <N> JavaFX Node
- * @param <T> Controller's Class.
- *
+ * @param node JavaFX Node to be used on the Scene graph represented from an FXML file.
+ * @param controller An instance of the controller identified inside.
+ * @param <N> JavaFX Node type parameter.
+ * @param <T> Controller's Class type parameter.
+ * @param namedViewModels A set of named variables referencing View Models inside controller.
  */
 public record JFXNode<N extends Node, T>(N node, T controller, Set<NamedVm> namedViewModels) {
 
     /**
-     * Returns a view model after updating based on the variable name.
+     * Updates a view model after updating based on the variable name.
      * @param variableName variable name injected into the controller.
-     * @param updater A update consumer allowing the caller to update the view model
+     * @param updater An update consumer allowing the caller to update the view model
      * @param <S> A derived class of type ViewModel
      */
-    public <S extends ViewModel> void updateViewModel(String variableName, Consumer<S> updater ) {
+    public <S extends ViewModel> void updateViewModel(String variableName, Consumer<S> updater) {
         Optional<S> viewModelOption = getViewModel(variableName);
         viewModelOption.ifPresent(updater);
     }
@@ -51,19 +50,17 @@ public record JFXNode<N extends Node, T>(N node, T controller, Set<NamedVm> name
     /**
      * Returns a specified view model based on the variable name, otherwise empty.
      * @param variableName The variable name of the view model to fetch.
-     * @return An optional containing a ViewModel or empty.
      * @param <S> S is a derived ViewModel class type.
+     * @return An optional containing a ViewModel or empty.
      */
     public <S extends ViewModel> Optional<S> getViewModel(String variableName) {
-        Optional<S> found = Optional.empty();
         for (NamedVm namedVm : this.namedViewModels) {
             if (namedVm.variableName().equals(variableName)) {
                 ViewModel viewModel = namedVm.viewModel();
                 //noinspection unchecked
-                found = (Optional<S>) Optional.of(viewModel);
-                break;
+                return Optional.of((S) viewModel);
             }
         }
-        return found;
+        return Optional.empty();
     }
 }
