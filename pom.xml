@@ -16,7 +16,7 @@
 
     <groupId>org.carlfx</groupId>
     <artifactId>cognitive</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Cognitive</name>
@@ -36,8 +36,7 @@
         <connection>scm:git:git://github.com/carldea/cognitive.git</connection>
         <developerConnection>scm:git:ssh://github.com:carldea/cognitive.git</developerConnection>
         <url>https://github.com/carldea/cognitive</url>
-      <tag>release/1.6.0</tag>
-  </scm>
+    </scm>
 
     <distributionManagement>
         <snapshotRepository>
