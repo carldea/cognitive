@@ -1,6 +1,7 @@
 🚧 Work in progress 🚧
 Please view the Wiki [here](https://github.com/carldea/cognitive/wiki)
 # What's new? [Release notes](https://github.com/carldea/cognitive/releases)
+- [1.6.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.6.0) 07/07/2025 - Type safety improvements and added the Maven release plugin.
 - [1.5.1](https://github.com/carldea/cognitive/releases/tag/release%2F1.5.1) 11/11/2024 - Updated logging dependencies to be in test scope.
 - [1.5.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.5.0) 10/30/2024 - New support to get view model from a JFXNode record, new ways to monitor change and invoke validators on change.
 - [1.4.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.4.0) 10/18/2024 - New support to get properties as common JavaFX properties. Avoids down casting.
