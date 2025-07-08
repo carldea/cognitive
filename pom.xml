@@ -1,7 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
-    mvn clean install -P release
+    Does a dry run of the prepare release.
+    mvn release:prepare -DdryRun
+
+    Does a dry run of the perform before release. Tags and renames project version.
+    mvn release:perform -DdryRun
+
     Creates all required files before release
+    mvn clean install -P release
+
+    Creates all required files and releases to Maven Central
+    mvn deploy -P release
     -->
     <modelVersion>4.0.0</modelVersion>
 
@@ -172,6 +181,11 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.1.1</version>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -231,7 +245,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.2.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
