@@ -428,6 +428,10 @@ public class SimpleViewModel implements ViewModel {
      */
     @Override
     public SimpleViewModel addProperty(String name, Collection value, boolean skip) {
+        if (skip) {
+            skipPropertiesToSave.remove(name);
+            skipPropertiesToSave.add(name);
+        }
         // if it's already an observable list or set just add it.
         if (value instanceof ObservableList<?> observableList) {
             multiValueObservablesMap.put(name, observableList);
