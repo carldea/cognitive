@@ -58,7 +58,7 @@ You guessed it! The **MVVM** UI architecture pattern.
 
 ## What is MVVM?
 
-MVVM is an architectural pattern that isolates the business logic/back-end data(Presentation Logic) from the view (UI code). Its goal is to simplify user interface development. According to Wikipedia, the [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) is a variation of [Martin Fowler](https://en.wikipedia.org/wiki/Martin_Fowler_(software_engineer))'s perspective of the [Presentation Model design pattern](https://martinfowler.com/eaDev/PresentationModel.html).
+MVVM is an architectural pattern that isolates the business logic/back-end data(Presentation Logic) from the view (UI code). Its goal is to simplify user interface development. According to Wikipedia, the [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) is a variation of [Martin Fowler](https://en.wikipedia.org/wiki/Martin_Fowler_(software_engineer))'s perspective of the [Presentation Model design pattern](https://martinfowler.com/eaaDev/PresentationModel.html).
 
 Next, let's see how to apply the MVVM UI pattern to an existing JavaFX Application
 
