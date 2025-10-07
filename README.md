@@ -1,6 +1,7 @@
 🚧 Work in progress 🚧
 Please view the Wiki [here](https://github.com/carldea/cognitive/wiki)
 # What's new? [Release notes](https://github.com/carldea/cognitive/releases)
+- [1.6.1](https://github.com/carldea/cognitive/releases/tag/release%2F1.6.1) 08/05/2025 - fix for ignoring copy of list and set properties used to populate available options typically used for combobox items property.
 - [1.6.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.6.0) 07/07/2025 - Type safety improvements and added the Maven release plugin.
 - [1.5.1](https://github.com/carldea/cognitive/releases/tag/release%2F1.5.1) 11/11/2024 - Updated logging dependencies to be in test scope.
 - [1.5.0](https://github.com/carldea/cognitive/releases/tag/release%2F1.5.0) 10/30/2024 - New support to get view model from a JFXNode record, new ways to monitor change and invoke validators on change.
@@ -22,7 +23,7 @@ To see the demo's code see [Form demo](https://github.com/carldea/cognitive/tree
 
 *Gradle:*
 ```gradle
-implementation 'org.carlfx:cognitive:1.5.1'
+implementation 'org.carlfx:cognitive:1.6.1'
 ```
 
 *Maven:*
@@ -30,7 +31,7 @@ implementation 'org.carlfx:cognitive:1.5.1'
 <dependency>
     <groupId>org.carlfx</groupId>
     <artifactId>cognitive</artifactId>
-    <version>1.5.1</version>
+    <version>1.6.1</version>
 </dependency>
 ```
 
